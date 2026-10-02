@@ -1,0 +1,2627 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>風城親子綠遊記（WindyEco Kids）| 竹縣親子生態微旅行智能規劃與繪本式遊記生成系統</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;600;700;900&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans TC"', 'sans-serif'],
+            display: ['"Fredoka"', '"Noto Sans TC"', 'sans-serif'],
+            serif: ['"Noto Serif TC"', 'serif'],
+          },
+          colors: {
+            brand: {
+              50: '#F0FDF4',
+              100: '#DCFCE7',
+              200: '#BBF7D0',
+              400: '#4ADE80',
+              500: '#22C55E',
+              600: '#16A34A',
+              700: '#15803D',
+              800: '#166534',
+              900: '#14532D',
+            },
+            windy: {
+              50: '#F0F9FF',
+              100: '#E0F2FE',
+              300: '#7DD3FC',
+              500: '#0EA5E9',
+              600: '#0284C7',
+              800: '#075985',
+            },
+            amberwood: {
+              50: '#FFFBEB',
+              100: '#FEF3C7',
+              500: '#F59E0B',
+              800: '#92400E',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar & Aesthetics */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #94A3B8;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #64748B;
+    }
+    
+    .paper-texture {
+      background-color: #fefcf9;
+      background-image: radial-gradient(#e5e7eb 0.75px, transparent 0.75px), radial-gradient(#e5e7eb 0.75px, #fefcf9 0.75px);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+    }
+
+    .book-shadow {
+      box-shadow: -10px 10px 25px -5px rgba(0, 0, 0, 0.1), 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+    }
+    
+    .leaf-badge {
+      clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 0% 100%);
+    }
+
+    @keyframes gentleFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(1.5deg); }
+    }
+    .float-anim {
+      animation: gentleFloat 5s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-brand-200 selection:text-brand-900">
+
+  <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/80 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-20">
+        <!-- Logo -->
+        <a href="#hero" class="flex items-center gap-3 group">
+          <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-windy-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform">
+            <i class="fa-solid fa-leaf text-xl sm:text-2xl"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-display font-bold text-lg sm:text-xl tracking-tight text-slate-900">風城親子綠遊記</span>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 hidden sm:inline-block">WindyEco Kids</span>
+            </div>
+            <p class="text-xs text-slate-500 font-medium">中文系 × 資管系 跨領域創新提案</p>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <div class="hidden lg:flex items-center gap-7 text-sm font-medium text-slate-600">
+          <a href="#painpoints" class="hover:text-brand-600 transition-colors">核心痛點 (35%)</a>
+          <a href="#solution" class="hover:text-brand-600 transition-colors">技術架構 (25%)</a>
+          <a href="#demo" class="hover:text-brand-600 transition-colors font-bold text-brand-600 flex items-center gap-1.5">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i> 繪本生成實機演練
+          </a>
+          <a href="#routes" class="hover:text-brand-600 transition-colors">示範路線庫</a>
+          <a href="#business" class="hover:text-brand-600 transition-colors">商業模式 (25%)</a>
+          <a href="#roadmap" class="hover:text-brand-600 transition-colors">執行期程 (15%)</a>
+        </div>
+
+        <!-- Action CTA -->
+        <div class="flex items-center gap-3">
+          <button id="navOpenColoringBtn" class="border border-brand-500 text-brand-700 hover:bg-brand-50 bg-white px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm shadow-sm transition-all flex items-center gap-2">
+            <i class="fa-solid fa-palette text-amber-500"></i>
+            <span>下載繪圖範本</span>
+          </button>
+          <a href="#demo" class="bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl font-semibold text-xs sm:text-sm shadow-md shadow-brand-500/25 transition-all hover:shadow-lg flex items-center gap-2">
+            <i class="fa-solid fa-book-open"></i>
+            <span>互動體驗繪本</span>
+          </a>
+          <!-- Mobile Menu Toggle Button -->
+          <button id="mobileMenuBtn" aria-label="切換選單" class="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100">
+            <i class="fa-solid fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobileMenu" class="hidden lg:hidden border-b border-slate-200 bg-white px-4 pt-2 pb-4 space-y-2 text-sm font-medium">
+      <a href="#painpoints" class="block py-2 text-slate-700 hover:text-brand-600">一、在地痛點與核心問題意識 (35%)</a>
+      <a href="#solution" class="block py-2 text-slate-700 hover:text-brand-600">二、解決方案與跨領域架構 (25%)</a>
+      <a href="#demo" class="block py-2 text-brand-600 font-semibold">★ 即時繪本生成體驗區（支援直接貼上照片）</a>
+      <button id="mobileColoringBtn" class="w-full text-left py-2 text-amber-600 font-semibold flex items-center gap-2">
+        <i class="fa-solid fa-palette"></i> 下載繪圖塗鴉填色範本
+      </button>
+      <a href="#routes" class="block py-2 text-slate-700 hover:text-brand-600">三、新竹特色低碳示範路線</a>
+      <a href="#business" class="block py-2 text-slate-700 hover:text-brand-600">四、營運模式與 B2B/B2G</a>
+      <a href="#roadmap" class="block py-2 text-slate-700 hover:text-brand-600">五、12個月期程與風險評估</a>
+    </div>
+  </nav>
+
+  <header id="hero" class="relative overflow-hidden bg-gradient-to-b from-brand-50/70 via-windy-50/40 to-slate-50 pt-10 sm:pt-16 pb-20">
+    <!-- Atmospheric background blobs -->
+    <div class="absolute top-10 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-tr from-brand-200/40 to-windy-200/30 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-10">
+        <!-- Badge -->
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-brand-200 text-brand-800 text-xs sm:text-sm font-medium shadow-sm mb-5">
+          <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
+          竹縣跨領域大專生創業競賽與地方創生提案
+        </div>
+        
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-tight sm:leading-tight mb-6">
+          隨走隨拍，<span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-windy-600">旅途即繪本</span>！<br class="hidden sm:inline">
+          竹縣親子生態微旅行智能規劃
+        </h1>
+        
+        <p class="text-base sm:text-lg text-slate-600 leading-relaxed font-normal mb-8">
+          以「中文文學敘事」賦予照片靈魂，以「資管低碳串接」打通竹縣路網。<br class="hidden md:inline">
+          讓高壓雙薪竹科家庭告別罐頭遊具與塞車焦慮，將孩童手機隨拍轉化為專屬自然科普成長紀念繪本。
+        </p>
+
+        <!-- Metrics summary ribbon -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-4xl mx-auto text-left">
+          <div class="bg-white/80 backdrop-blur-sm border border-slate-200/80 p-3.5 rounded-2xl shadow-sm">
+            <div class="text-brand-600 font-bold text-xs uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <i class="fa-solid fa-users"></i> 受眾痛點
+            </div>
+            <div class="text-slate-900 font-bold text-base">高壓竹科科技雙薪</div>
+            <div class="text-xs text-slate-500">幼童密度冠全台・假日焦慮</div>
+          </div>
+          <div class="bg-white/80 backdrop-blur-sm border border-slate-200/80 p-3.5 rounded-2xl shadow-sm">
+            <div class="text-windy-600 font-bold text-xs uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <i class="fa-solid fa-seedling"></i> 低碳核心
+            </div>
+            <div class="text-slate-900 font-bold text-base">鐵道 + YouBike 2.0</div>
+            <div class="text-xs text-slate-500">串聯六家線・內灣線古道</div>
+          </div>
+          <div class="bg-white/80 backdrop-blur-sm border border-slate-200/80 p-3.5 rounded-2xl shadow-sm">
+            <div class="text-amber-600 font-bold text-xs uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <i class="fa-solid fa-book"></i> 中文系技術
+            </div>
+            <div class="text-slate-900 font-bold text-base">童話分齡敘事引擎</div>
+            <div class="text-xs text-slate-500">3-6歲韻律 / 7-10歲科普推理</div>
+          </div>
+          <div class="bg-white/80 backdrop-blur-sm border border-slate-200/80 p-3.5 rounded-2xl shadow-sm">
+            <div class="text-purple-600 font-bold text-xs uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <i class="fa-solid fa-code"></i> 資管系落地
+            </div>
+            <div class="text-slate-900 font-bold text-base">LINE LIFF + TDX API</div>
+            <div class="text-xs text-slate-500">零下載門檻・2分鐘一鍵出書</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="painpoints" class="py-16 sm:py-20 bg-white border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-rose-50 text-rose-700 font-semibold text-xs mb-3 border border-rose-200">
+            <i class="fa-solid fa-bullseye"></i> 評分指標 35%：地方痛點與核心問題意識
+          </div>
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">
+            新竹縣親子家庭的「三難困境」
+          </h2>
+          <p class="text-slate-500 mt-2 text-sm sm:text-base max-w-2xl">
+            竹北、竹東高工時科技聚落背後，年輕父母每逢週末面臨空間、知識轉譯與交通出行的重重斷鏈。
+          </p>
+        </div>
+        <div class="mt-4 md:mt-0 text-xs font-medium text-slate-400">
+          聚焦場域：竹北高鐵新市鎮、頭前溪沿岸、竹東與內灣支線客庄
+        </div>
+      </div>
+
+      <!-- 3 Major Painpoints Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        
+        <!-- Painpoint 1 -->
+        <div class="rounded-3xl bg-slate-50 p-6 sm:p-8 border border-slate-200 hover:border-rose-300 hover:shadow-lg transition-all relative overflow-hidden group">
+          <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl mb-6 font-black group-hover:scale-110 transition-transform">
+            <i class="fa-solid fa-cube"></i>
+          </div>
+          <div class="text-xs font-bold uppercase tracking-wider text-rose-600 mb-1">痛點 01</div>
+          <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-3">場域單一與「罐頭化」育兒</h3>
+          <p class="text-slate-600 text-sm leading-relaxed mb-4">
+            科技父母平日處於高壓加班狀態，週末難有充裕心力深度排程，只能直奔巨城或社區公園。孩子反覆滑塑膠溜滑梯，缺乏接觸真實泥土、觸摸溪石與觀察花草生長的自然感官刺激。
+          </p>
+          <div class="bg-rose-50/70 border border-rose-100 rounded-xl p-3 text-xs text-rose-900">
+            <strong>核心現況：</strong>科技都會區幼童比例高居全台，但戶外生態素養體驗場域嚴重失衡。
+          </div>
+        </div>
+
+        <!-- Painpoint 2 -->
+        <div class="rounded-3xl bg-slate-50 p-6 sm:p-8 border border-slate-200 hover:border-amber-300 hover:shadow-lg transition-all relative overflow-hidden group">
+          <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl mb-6 font-black group-hover:scale-110 transition-transform">
+            <i class="fa-solid fa-camera-retro"></i>
+          </div>
+          <div class="text-xs font-bold uppercase tracking-wider text-amber-600 mb-1">痛點 02</div>
+          <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-3">隨手拍被淡忘，缺乏科普轉譯</h3>
+          <p class="text-slate-600 text-sm leading-relaxed mb-4">
+            孩子好奇發問：「這隻蟲在幹嘛？這棵樹叫什麼？」家長多非自然生物背景，只能回應「不知道，快走不要摸」。拍照存進手機相簿後便塵封，錯失寶貴環境好奇心與生命教育轉化契機。
+          </p>
+          <div class="bg-amber-50/70 border border-amber-100 rounded-xl p-3 text-xs text-amber-900">
+            <strong>核心現況：</strong>家長缺乏即時圖文敘事助手，難以把手機相簿沉澱為親子共同記憶。
+          </div>
+        </div>
+
+        <!-- Painpoint 3 -->
+        <div class="rounded-3xl bg-slate-50 p-6 sm:p-8 border border-slate-200 hover:border-windy-300 hover:shadow-lg transition-all relative overflow-hidden group">
+          <div class="w-12 h-12 rounded-2xl bg-windy-100 text-windy-600 flex items-center justify-center text-xl mb-6 font-black group-hover:scale-110 transition-transform">
+            <i class="fa-solid fa-car-tunnel"></i>
+          </div>
+          <div class="text-xs font-bold uppercase tracking-wider text-windy-600 mb-1">痛點 03</div>
+          <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-3">低碳最後一哩路斷鏈，塞車高碳排</h3>
+          <p class="text-slate-600 text-sm leading-relaxed mb-4">
+            出遊習慣自行開車，造成經國橋、光明六路每逢假日動線嚴重癱瘓。台鐵六家線與內灣線極富人文與淺山生態潛力，卻因缺乏友善的「大眾運輸 + YouBike 2.0 + 步道」直覺導引，推廣不易。
+          </p>
+          <div class="bg-windy-50/70 border border-windy-100 rounded-xl p-3 text-xs text-windy-900">
+            <strong>核心現況：</strong>家庭旅遊淪為「換個地方塞車找車位」，違背低碳永續淨零目標。
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Problem Statement Highlight Quote -->
+      <div class="mt-10 rounded-2xl bg-gradient-to-r from-brand-900 to-slate-900 text-white p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+        <div class="space-y-2 text-center md:text-left">
+          <span class="inline-block px-3 py-1 bg-brand-500/20 text-brand-300 rounded-lg text-xs font-mono font-semibold">PROJECT MISSION</span>
+          <h4 class="text-xl sm:text-2xl font-bold">「隨手拍的照片，不該只是吃記憶體的一組代碼」</h4>
+          <p class="text-slate-300 text-sm max-w-2xl">
+            透過中文系的敘事溫暖與資管系的科技架構，讓每一次踏出家門的綠色漫步，都變身為一本永久珍藏的童話冒險繪本與生態百科。
+          </p>
+        </div>
+        <div class="shrink-0">
+          <a href="#solution" class="bg-brand-500 hover:bg-brand-400 text-slate-900 font-bold px-5 py-3 rounded-xl text-sm transition-all shadow-lg flex items-center gap-2">
+            <span>探索解決方案</span>
+            <i class="fa-solid fa-arrow-down"></i>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="solution" class="py-16 sm:py-20 bg-slate-50 border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="max-w-3xl mb-12">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-brand-100 text-brand-800 font-semibold text-xs mb-3 border border-brand-200">
+          <i class="fa-solid fa-code-merge"></i> 評分指標 25%：跨領域解決方案與技術架構
+        </div>
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">
+          中文系的敘事溫度 × 資管系的技術底座
+        </h2>
+        <p class="text-slate-600 mt-2 text-sm sm:text-base">
+          不堆砌過度沈重的自研大模型，而是以輕量級 Microservices 與結構化 Prompt Engineering 達到極佳的性價比與即時可用性。
+        </p>
+      </div>
+
+      <!-- Architecture Two Columns -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        
+        <!-- Chinese Dept Core: Storytelling & Literacy -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+              <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-lg font-bold">
+                <i class="fa-solid fa-pen-nib"></i>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-slate-900">中文系核心：童話敘事生成與科普轉譯引擎</h3>
+                <p class="text-xs text-slate-500">Storytelling & Epistemology Engine</p>
+              </div>
+            </div>
+
+            <div class="space-y-5 text-sm">
+              <div class="bg-amber-50/60 rounded-2xl p-4 border border-amber-200/60">
+                <div class="font-bold text-amber-900 mb-1 flex items-center gap-2">
+                  <i class="fa-solid fa-feather"></i> 1. 照片情節化（起承轉合冒險框架）
+                </div>
+                <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                  將孩子上傳的照片時間軸解構為「出發探險 → 意外奇遇 → 自然解密 → 帶著回憶滿載而歸」之古典童話旅程結構，絕非無生氣的單純圖文貼標。
+                </p>
+              </div>
+
+              <div class="bg-amber-50/60 rounded-2xl p-4 border border-amber-200/60">
+                <div class="font-bold text-amber-900 mb-1 flex items-center gap-2">
+                  <i class="fa-solid fa-children"></i> 2. 分齡自適應語料庫（Age-Adaptive Prompting）
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-2">
+                  <div class="bg-white p-3 rounded-xl border border-amber-200/80">
+                    <span class="inline-block px-2 py-0.5 rounded bg-brand-100 text-brand-800 text-[11px] font-bold mb-1">幼齡版 3–6 歲</span>
+                    <p class="text-slate-600 text-xs">擬人化與感官啟發、大量疊字與動物對話，如「綠色小帆船飄呀飄」、「番鴨船長搖頭晃腦」。</p>
+                  </div>
+                  <div class="bg-white p-3 rounded-xl border border-amber-200/80">
+                    <span class="inline-block px-2 py-0.5 rounded bg-windy-100 text-windy-800 text-[11px] font-bold mb-1">學齡版 7–10 歲</span>
+                    <p class="text-slate-600 text-xs">生態推理、演化適應與歷史脈絡，如「枯木上的五色鳥是森林築巢建築師」、「先民糯米砌橋工法」。</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-amber-50/60 rounded-2xl p-4 border border-amber-200/60">
+                <div class="font-bold text-amber-900 mb-1 flex items-center gap-2">
+                  <i class="fa-solid fa-graduation-cap"></i> 3. 「小博士科普小知識卡」自動萃取
+                </div>
+                <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                  每頁繪本故事底部內嵌 100 字極簡自然小百科（如落羽松不是松樹而是杉科、豆娘與蜻蜓的翅膀合攏差異），兼顧感性閱讀與理性環境教育。
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span>語料審定：兒童文學修辭標準</span>
+            <span class="text-amber-700 font-semibold"><i class="fa-solid fa-check"></i> 拒絕說教式死板教條</span>
+          </div>
+        </div>
+
+        <!-- MIS Dept Core: Technical Stack -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+              <div class="w-10 h-10 rounded-xl bg-windy-100 text-windy-700 flex items-center justify-center text-lg font-bold">
+                <i class="fa-solid fa-layer-group"></i>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-slate-900">資管系實作：智慧服務與輕量高擴展技術棧</h3>
+                <p class="text-xs text-slate-500">Full-Stack Cloud & Automation Workflow</p>
+              </div>
+            </div>
+
+            <!-- Tech pipeline flowchart -->
+            <div class="space-y-4">
+              <!-- Step 1 -->
+              <div class="flex items-start gap-3.5 p-3 rounded-2xl hover:bg-slate-50 transition-colors">
+                <div class="w-8 h-8 rounded-lg bg-green-500 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+                  <i class="fa-brands fa-line text-lg"></i>
+                </div>
+                <div class="text-xs sm:text-sm">
+                  <div class="font-bold text-slate-900 flex items-center gap-2">
+                    LINE LIFF 輕量前台
+                    <span class="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-mono">Zero Download</span>
+                  </div>
+                  <p class="text-slate-500 mt-0.5">免下載專屬 APP，以家長最熟悉的通訊軟體為入口，拍照即傳，旅途零學習成本。</p>
+                </div>
+              </div>
+
+              <!-- Step 2 -->
+              <div class="flex items-start gap-3.5 p-3 rounded-2xl hover:bg-slate-50 transition-colors">
+                <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+                  <i class="fa-solid fa-train"></i>
+                </div>
+                <div class="text-xs sm:text-sm">
+                  <div class="font-bold text-slate-900 flex items-center gap-2">
+                    交通部 TDX 平台 API 整合
+                    <span class="text-[10px] bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded font-mono">FastAPI</span>
+                  </div>
+                  <p class="text-slate-500 mt-0.5">即時捕捉台鐵內灣/六家線班次與 YouBike 2.0 車柱即時水位，智能串接最後一哩路。</p>
+                </div>
+              </div>
+
+              <!-- Step 3 -->
+              <div class="flex items-start gap-3.5 p-3 rounded-2xl hover:bg-slate-50 transition-colors">
+                <div class="w-8 h-8 rounded-lg bg-purple-600 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+                  <i class="fa-solid fa-brain"></i>
+                </div>
+                <div class="text-xs sm:text-sm">
+                  <div class="font-bold text-slate-900 flex items-center gap-2">
+                    Vision-LLM 影像特徵與生態代理
+                    <span class="text-[10px] bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded font-mono">Multimodal</span>
+                  </div>
+                  <p class="text-slate-500 mt-0.5">初篩動植物與地景特徵，若辨識不確定則優雅降級為「自然精靈謎題」，確保故事順暢。</p>
+                </div>
+              </div>
+
+              <!-- Step 4 -->
+              <div class="flex items-start gap-3.5 p-3 rounded-2xl hover:bg-slate-50 transition-colors">
+                <div class="w-8 h-8 rounded-lg bg-amber-600 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+                  <i class="fa-solid fa-file-pdf"></i>
+                </div>
+                <div class="text-xs sm:text-sm">
+                  <div class="font-bold text-slate-900 flex items-center gap-2">
+                    Puppeteer 動態套版 & POD 印刷對接
+                    <span class="text-[10px] bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded font-mono">Supabase Storage</span>
+                  </div>
+                  <p class="text-slate-500 mt-0.5">回程電車上 2 分鐘輸出全彩 PDF 電子書，支援一鍵 FSC 環保紙直連印刷送府。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span>平均生成延遲：&lt; 30 秒</span>
+            <span class="text-windy-700 font-semibold"><i class="fa-solid fa-bolt"></i> 現代高併發無伺服架構</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Execution Sequence Flowchart (大山背示範) -->
+      <div class="bg-gradient-to-br from-brand-900 via-slate-900 to-windy-950 text-white rounded-3xl p-6 sm:p-10 shadow-xl">
+        <div class="text-center max-w-2xl mx-auto mb-8">
+          <span class="px-3 py-1 bg-brand-500/20 text-brand-300 rounded-full text-xs font-semibold tracking-wide uppercase">Real Journey Flow</span>
+          <h3 class="text-xl sm:text-2xl font-bold mt-2">橫山大山背騎龍古道之旅：實際操作體驗範例</h3>
+          <p class="text-slate-400 text-xs sm:text-sm mt-1">從搭乘內灣支線到一鍵領取實體繪本的完整綠色旅程</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 relative">
+          <!-- Step 1 -->
+          <div class="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/10 hover:border-brand-400 transition-colors">
+            <div class="w-8 h-8 rounded-full bg-brand-500 text-slate-900 font-bold flex items-center justify-center text-sm mb-3">1</div>
+            <h4 class="font-bold text-base text-brand-300 mb-1">出發指引</h4>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              打開 LINE 收到提示：搭乘台鐵內灣線至九讚頭/竹東站，轉搭台灣好行或綠色接駁抵達騎龍古道入口。
+            </p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/10 hover:border-brand-400 transition-colors">
+            <div class="w-8 h-8 rounded-full bg-windy-400 text-slate-900 font-bold flex items-center justify-center text-sm mb-3">2</div>
+            <h4 class="font-bold text-base text-windy-300 mb-1">漫步捕捉</h4>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              孩子隨走隨拍：古樸糯米橋、溪谷筆筒樹巨蕨、泥土邊收攏雙翅的細長豆娘，系統自動標註 GPS 與時間戳。
+            </p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/10 hover:border-brand-400 transition-colors">
+            <div class="w-8 h-8 rounded-full bg-amber-400 text-slate-900 font-bold flex items-center justify-center text-sm mb-3">3</div>
+            <h4 class="font-bold text-base text-amber-300 mb-1">一鍵生成</h4>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              回程電車上按下「生成繪本」，2分鐘內即產出 4 頁全彩 PDF 電子書《小宇的大山背綠色探險記》。
+            </p>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/10 hover:border-brand-400 transition-colors">
+            <div class="w-8 h-8 rounded-full bg-emerald-400 text-slate-900 font-bold flex items-center justify-center text-sm mb-3">4</div>
+            <h4 class="font-bold text-base text-emerald-300 mb-1">綠色認證</h4>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              繪本結尾統計：今日家庭大眾運輸 + 健行，為地球減少了 <strong>3.2 kg 碳排放</strong>！可直接線上送印。
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="demo" class="py-16 sm:py-24 bg-gradient-to-b from-slate-100 via-brand-50/40 to-slate-100 border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500 text-white font-bold text-xs mb-3 shadow-sm">
+          <i class="fa-solid fa-sparkles"></i> 核心體驗即時模擬展示
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+          繪本式遊記生成系統：現場互動模擬器
+        </h2>
+        <p class="text-slate-600 mt-3 text-sm sm:text-base">
+          體驗孩童在竹縣生態步道隨拍照片後，系統如何根據不同年齡層（3-6歲 / 7-10歲）自適應轉譯童話故事與小博士科普卡片。<strong>您也可以直接上傳或貼上自己的照片！</strong>
+        </p>
+      </div>
+
+      <!-- Simulator Interactive Container -->
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
+        
+        <!-- Controls Bar -->
+        <div class="bg-slate-900 text-white p-4 sm:p-6 flex flex-wrap items-center justify-between gap-4">
+          
+          <!-- Route selector buttons -->
+          <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 w-full sm:w-auto">
+            <span class="text-xs font-semibold text-slate-400 mr-1 shrink-0"><i class="fa-solid fa-route"></i> 路線範例：</span>
+            <button id="scenarioBtnDashanbei" class="scenario-btn active px-3.5 py-1.5 rounded-xl text-xs font-bold bg-brand-600 text-white transition-all">
+              橫山大山背騎龍古道
+            </button>
+            <button id="scenarioBtnXinwawu" class="scenario-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">
+              竹北新瓦屋水圳公園
+            </button>
+            <button id="scenarioBtnXiangshan" class="scenario-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">
+              香山濕地潮汐賞蟹
+            </button>
+          </div>
+
+          <!-- Age Switcher and Quick Actions -->
+          <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+            <span class="text-xs font-medium text-slate-400">分齡敘事模式：</span>
+            <div class="inline-flex p-1 bg-slate-800 rounded-xl border border-slate-700">
+              <button id="ageBtnJunior" class="age-toggle-btn px-3 py-1 rounded-lg text-xs font-bold transition-all bg-amber-500 text-slate-950 shadow">
+                幼齡版 (3-6 歲)
+              </button>
+              <button id="ageBtnSenior" class="age-toggle-btn px-3 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all">
+                學齡版 (7-10 歲)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulator Body: Left Photo Selector, Right Book Preview -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[580px]">
+          
+          <!-- Left: Trip Footprint Photos Thumbnails (4 Cols) -->
+          <div class="lg:col-span-4 bg-slate-50/90 p-5 sm:p-6 border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  <i class="fa-solid fa-images text-brand-600 mr-1"></i> 今日漫步足跡照片 (<span id="photoCount">4</span>)
+                </div>
+                <span class="text-[11px] px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-mono font-medium">GPS 已標記</span>
+              </div>
+
+              <!-- Photos List -->
+              <div id="photoListContainer" class="space-y-3 mb-5">
+                <!-- Dynamically populated via JS -->
+              </div>
+
+              <!-- DIRECT PHOTO UPLOAD & PASTE BOX -->
+              <div id="pasteDropZone" class="relative group border-2 border-dashed border-brand-300 hover:border-brand-500 bg-brand-50/50 hover:bg-brand-50/80 rounded-2xl p-4 text-center transition-all cursor-pointer">
+                <input type="file" id="userPhotoInput" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" title="點擊上傳或拖曳圖片到此處">
+                <div class="flex flex-col items-center justify-center space-y-1.5 pointer-events-none">
+                  <div class="w-10 h-10 rounded-full bg-white shadow-sm text-brand-600 flex items-center justify-center text-base group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                  </div>
+                  <div class="text-xs font-bold text-brand-900">
+                    點擊上傳 或 直接按 <kbd class="px-1.5 py-0.5 rounded bg-white border border-slate-300 shadow-xs font-mono text-[10px]">Ctrl+V</kbd> 貼上照片
+                  </div>
+                  <p class="text-[11px] text-slate-500">支援手機即拍、截圖貼上，AI 立即辨識轉譯繪本</p>
+                </div>
+              </div>
+
+              <!-- User Upload Status indicator if custom photo applied -->
+              <div id="userPhotoStatus" class="hidden mt-2 p-2 bg-emerald-50 border border-emerald-200 rounded-xl text-[11px] text-emerald-800 flex items-center justify-between">
+                <span class="flex items-center gap-1.5">
+                  <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                  <span>已套用您的自訂照片！</span>
+                </span>
+                <button id="resetCustomPhotoBtn" class="text-emerald-700 underline hover:text-emerald-900 font-medium">還原預設</button>
+              </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-slate-200 space-y-2">
+              <button id="regenerateBtn" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow">
+                <i class="fa-solid fa-rotate text-brand-400"></i>
+                <span>重新模擬 AI 故事編排</span>
+              </button>
+              <button id="openColoringTemplateBtn" class="w-full bg-white hover:bg-amber-50 text-amber-800 border border-amber-300 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-sm">
+                <i class="fa-solid fa-palette text-amber-500"></i>
+                <span>下載繪圖填色範本 (線稿可列印)</span>
+              </button>
+              <p class="text-[11px] text-slate-400 text-center">
+                以中文系 Prompt 模板實時重構起承轉合章節
+              </p>
+            </div>
+          </div>
+
+          <!-- Right: Book Preview Canvas (8 Cols) -->
+          <div class="lg:col-span-8 p-5 sm:p-8 paper-texture flex flex-col justify-between relative">
+            
+            <!-- Book Header Info -->
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/80 pb-4 mb-4">
+              <div>
+                <span id="bookBadge" class="inline-block px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 mb-1">
+                  第 1 頁：啟程探險
+                </span>
+                <h3 id="bookPageTitle" class="text-xl sm:text-2xl font-serif font-black text-slate-900">
+                  糯米做成的大橋？
+                </h3>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs text-slate-500 font-mono" id="pageIndicator">頁數 1 / 4</span>
+                <div class="flex items-center gap-1">
+                  <button id="prevPageBtn" class="w-8 h-8 rounded-lg bg-white border border-slate-300 text-slate-700 flex items-center justify-center hover:bg-slate-100 disabled:opacity-40 transition-colors" disabled>
+                    <i class="fa-solid fa-chevron-left text-xs"></i>
+                  </button>
+                  <button id="nextPageBtn" class="w-8 h-8 rounded-lg bg-white border border-slate-300 text-slate-700 flex items-center justify-center hover:bg-slate-100 disabled:opacity-40 transition-colors">
+                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Page Main Content Area -->
+            <div id="pageMainContent" class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center flex-1 my-2">
+              
+              <!-- Picture Box (Dynamic User Photo OR SVG Mock Illustration + Footprint Pin) -->
+              <div class="md:col-span-6 flex flex-col items-center">
+                <div class="w-full aspect-[4/3] rounded-2xl overflow-hidden border-4 border-white shadow-lg relative group bg-slate-100 flex items-center justify-center">
+                  <!-- Container for either user photo or dynamic illustration -->
+                  <div id="illustrationGraphic" class="w-full h-full flex items-center justify-center">
+                    <!-- SVG or <img> placed here dynamically -->
+                  </div>
+                  
+                  <div class="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur-sm text-white px-2.5 py-1 rounded-md text-[10px] font-mono flex items-center gap-1.5 z-10">
+                    <i class="fa-solid fa-location-dot text-rose-400"></i>
+                    <span id="photoLocationTag">大山背騎龍古道入口</span>
+                  </div>
+
+                  <div class="absolute top-2 right-2 bg-white/90 text-slate-800 px-2 py-0.5 rounded text-[10px] font-bold shadow-sm z-10">
+                    隨手拍 #<span id="photoIndexTag">01</span>
+                  </div>
+
+                  <!-- Quick paste overlay helper -->
+                  <div class="absolute inset-0 bg-slate-900/60 text-white opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 pointer-events-none p-4 text-center z-20">
+                    <i class="fa-solid fa-paste text-2xl text-amber-300"></i>
+                    <span class="text-xs font-bold">複製圖片後在此處按 Ctrl+V 即可直接貼上！</span>
+                  </div>
+                </div>
+                <span id="imageSourceLabel" class="text-[11px] text-slate-400 mt-2 font-medium">📷 小朋友隨手拍攝真實照片 × AI 童趣插畫合成</span>
+              </div>
+
+              <!-- Narrative & Epistemology Text -->
+              <div class="md:col-span-6 flex flex-col justify-between h-full space-y-4">
+                
+                <!-- Story text -->
+                <div class="bg-white/90 backdrop-blur-sm p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-sm relative">
+                  <i class="fa-solid fa-quote-left text-amber-200 text-3xl absolute top-2 right-3 -z-0"></i>
+                  <div class="text-xs font-bold text-amber-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-book-sparkles"></i> 冒險章節敘事
+                  </div>
+                  <p id="storyNarrative" class="text-slate-800 text-sm sm:text-base leading-relaxed font-serif relative z-10">
+                    小宥踩著輕快的小步伐，來到了一座彎彎的石橋前。這座橋看起來好像甜甜的糯米年糕疊起來的！微風吹過竹林，沙沙沙地唱著歌，糯米橋爺爺笑瞇瞇地挺起胸膛，守護著小溪流過了一百年。
+                  </p>
+                </div>
+
+                <!-- Epistemology knowledge card -->
+                <div class="bg-brand-50/90 border border-brand-200/80 rounded-2xl p-4 shadow-sm">
+                  <div class="flex items-center gap-2 mb-1.5">
+                    <div class="w-5 h-5 rounded-md bg-brand-600 text-white flex items-center justify-center text-[10px]">
+                      <i class="fa-solid fa-seedling"></i>
+                    </div>
+                    <span class="text-xs font-bold text-brand-900" id="cardKnowledgeTitle">【自然與人文小百科】糯米橋的秘密</span>
+                  </div>
+                  <p id="cardKnowledgeBody" class="text-xs text-slate-600 leading-relaxed">
+                    在以前還沒有水泥的年代，勤勞的客家先民將糯米飯、紅糖和石灰攪拌在一起當作黏著劑，把一塊塊堅硬的溪石牢牢黏成美麗的拱橋，是既環保又耐震的百年古法建築智慧喔！
+                  </p>
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- Page Footer Actions & Carbon Stat -->
+            <div class="border-t border-slate-200/80 pt-4 mt-4 flex flex-wrap items-center justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 text-xs font-bold text-emerald-800 bg-emerald-100 px-3 py-1.5 rounded-xl">
+                  <i class="fa-solid fa-tree"></i>
+                  <span>今日低碳減碳足跡：<strong class="text-sm font-black" id="carbonStat">3.2</strong> kg CO₂e</span>
+                </div>
+                <span class="text-xs text-slate-400 hidden sm:inline">相當於種植了 0.3 棵林木</span>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button id="viewPdfModalBtn" class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md transition-all flex items-center gap-1.5">
+                  <i class="fa-solid fa-book-open"></i>
+                  <span>線上預覽全彩繪本冊</span>
+                </button>
+                <button id="orderBookBtn" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md transition-all flex items-center gap-1.5">
+                  <i class="fa-solid fa-truck-fast"></i>
+                  <span>一鍵 POD 環保送印</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <section id="routes" class="py-16 sm:py-20 bg-white border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-windy-100 text-windy-800 font-semibold text-xs mb-3 border border-windy-200">
+            <i class="fa-solid fa-compass"></i> 新竹特色示範庫
+          </div>
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">
+            低碳生態微旅行：三條特色示範主題路線
+          </h2>
+          <p class="text-slate-500 mt-2 text-sm sm:text-base max-w-2xl">
+            整合台鐵內灣/六家線、YouBike 2.0 與安全行人水圳步道，讓家長拋開塞車找車位的噩夢。
+          </p>
+        </div>
+        <div class="mt-4 md:mt-0 text-xs font-bold text-brand-700 bg-brand-50 px-3 py-2 rounded-xl border border-brand-200">
+          <i class="fa-solid fa-bicycle"></i> 亦支援無限制自由散步上傳
+        </div>
+      </div>
+
+      <!-- Route Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Route 1: Water & Hakka Cultural Line -->
+        <div class="rounded-3xl border border-slate-200 bg-slate-50/60 overflow-hidden hover:shadow-xl transition-all flex flex-col justify-between group">
+          <div>
+            <div class="h-44 bg-gradient-to-tr from-emerald-600 to-teal-500 relative p-6 flex flex-col justify-between text-white overflow-hidden">
+              <div class="absolute inset-0 bg-black/15 group-hover:scale-105 transition-transform duration-500"></div>
+              <div class="relative z-10 flex items-center justify-between">
+                <span class="bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-lg text-xs font-bold">高鐵城鎮綠廊</span>
+                <span class="text-xs font-bold text-emerald-100 flex items-center gap-1">
+                  <i class="fa-solid fa-leaf"></i> 減碳 ~2.4 kg
+                </span>
+              </div>
+              <div class="relative z-10">
+                <h3 class="text-2xl font-black tracking-tight text-white mb-1">水圳客庄生態線</h3>
+                <p class="text-xs text-emerald-100">竹北高鐵站 → 水圳森林公園 → 新瓦屋客家文化聚落</p>
+              </div>
+            </div>
+
+            <div class="p-6 space-y-4">
+              <!-- Transit Tag -->
+              <div class="bg-white p-3 rounded-xl border border-slate-200 text-xs">
+                <div class="font-bold text-slate-800 mb-1 flex items-center gap-1.5">
+                  <i class="fa-solid fa-shoe-prints text-brand-600"></i> 低碳搭乘模式
+                </div>
+                <div class="text-slate-600">台鐵六家線 / 高鐵新竹站出站 → YouBike 2.0 騎乘 8 分鐘 → 沿水圳林蔭慢速健行。</div>
+              </div>
+
+              <!-- Ecological Highlights -->
+              <div class="text-xs space-y-2">
+                <div class="font-bold text-slate-700">🌿 繪本探索亮點：</div>
+                <ul class="space-y-1.5 text-slate-600">
+                  <li class="flex items-center gap-2">
+                    <i class="fa-solid fa-check text-brand-600 text-[10px]"></i>
+                    <span>水圳生態：落羽松羽狀複葉、水生睡蓮與綠頭鴨</span>
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <i class="fa-solid fa-check text-brand-600 text-[10px]"></i>
+                    <span>歷史建築：新瓦屋三合院古厝、傳統水車運轉力學</span>
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <i class="fa-solid fa-check text-brand-600 text-[10px]"></i>
+                    <span>特色小店：在地青農有機文創小舖休憩打卡點</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-6 pt-0">
+            <button onclick="switchRouteFromOutside('xinwawu')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold text-xs transition-colors shadow-sm flex items-center justify-center gap-2">
+              <i class="fa-solid fa-eye"></i>
+              <span>載入此路線進行繪本體驗</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Route 2: Foothill Historic Trail Line -->
+        <div class="rounded-3xl border border-slate-200 bg-slate-50/60 overflow-hidden hover:shadow-xl transition-all flex flex-col justify-between group">
+          <div>
+            <div class="h-44 bg-gradient-to-tr from-amber-700 to-amber-500 relative p-6 flex flex-col justify-between text-white overflow-hidden">
+              <div class="absolute inset-0 bg-black/15 group-hover:scale-105 transition-transform duration-500"></div>
+              <div class="relative z-10 flex items-center justify-between">
+                <span class="bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-lg text-xs font-bold">淺山鐵道探秘</span>
+                <span class="text-xs font-bold text-amber-100 flex items-center gap-1">
+                  <i class="fa-solid fa-leaf"></i> 減碳 ~3.2 kg
+                </span>
+              </div>
+              <div class="relative z-10">
+                <h3 class="text-2xl font-black tracking-tight text-white mb-1">淺山古道生態線</h3>
+                <p class="text-xs text-amber-100">台鐵內灣支線 → 九讚頭/竹東站 → 橫山大山背騎龍古道</p>
+              </div>
+            </div>
+
+            <div class="p-6 space-y-4">
+              <!-- Transit Tag -->
+              <div class="bg-white p-3 rounded-xl border border-slate-200 text-xs">
+                <div class="font-bold text-slate-800 mb-1 flex items-center gap-1.5">
+                  <i class="fa-solid fa-train text-amber-600"></i> 低碳搭乘模式
+                </div>
+                <div class="text-slate-600">台鐵內灣線支線柴油電車悠閒觀景 → 銜接台灣好行/在地綠巴抵達古道登山口。</div>
+              </div>
+
+              <!-- Ecological Highlights -->
+              <div class="text-xs space-y-2">
+                <div class="font-bold text-slate-700">🌿 繪本探索亮點：</div>
+                <ul class="space-y-1.5 text-slate-600">
+                  <li class="flex items-center gap-2">
+                    <i class="fa-solid fa-check text-amber-600 text-[10px]"></i>
+                    <span>先民工法：百年糯米石砌拱橋（低碳無水泥工法）</span>
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <i class="fa-solid fa-check text-amber-600 text-[10px]"></i>
+                    <span>侏儸紀活化石：筆筒樹、桫欏與溪谷豐富蕨類群</span>
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <i class="fa-solid fa-check text-amber-600 text-[10px]"></i>
+                    <span>昆蟲觀察：豆娘與蜻蜓飛行停歇生態、春季螢火蟲</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-6 pt-0">
+            <button onclick="switchRouteFromOutside('dashanbei')" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-2.5 rounded-xl font-bold text-xs transition-colors shadow-sm flex items-center justify-center gap-2">
+              <i class="fa-solid fa-eye"></i>
+              <span>載入此路線進行繪本體驗</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Route 3: Coastal Wetland Line -->
+        <div class="rounded-3xl border border-slate-200 bg-slate-50/60 overflow-hidden hover:shadow-xl transition-all flex flex-col justify-between group">
+          <div>
+            <div class="h-44 bg-gradient-to-tr from-sky-600 to-windy-500 relative p-6 flex flex-col justify-between text-white overflow-hidden">
+              <div class="absolute inset-0 bg-black/15 group-hover:scale-105 transition-transform duration-500"></div>
+              <div class="relative z-10 flex items-center justify-between">
+                <span class="bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-lg text-xs font-bold">海風潮汐走廊</span>
+                <span class="text-xs font-bold text-sky-100 flex items-center gap-1">
+                  <i class="fa-solid fa-leaf"></i> 減碳 ~2.8 kg
+                </span>
+              </div>
+              <div class="relative z-10">
+                <h3 class="text-2xl font-black tracking-tight text-white mb-1">海岸潮汐生態線</h3>
+                <p class="text-xs text-sky-100">台鐵香山百年檜木車站 → 香山濕地賞蟹步道 → 17公里海岸線</p>
+              </div>
+            </div>
+
+            <div class="p-6 space-y-4">
+              <!-- Transit Tag -->
+              <div class="bg-white p-3 rounded-xl border border-slate-200 text-xs">
+                <div class="font-bold text-slate-800 mb-1 flex items-center gap-1.5">
+                  <i class="fa-solid fa-bicycle text-windy-600"></i> 低碳搭乘模式
+                </div>
+                <div class="text-slate-600">台鐵香山站租借 YouBike / 親子電輔車 → 專屬沿海自行車無障礙道抵達步道。</div>
+              </div>
+
+              <!-- Ecological Highlights -->
+              <div class="text-xs space-y-2">
+                <div class="font-bold text-slate-700">🌿 繪本探索亮點：</div>
+                <ul class="space-y-1.5 text-slate-600">
+                  <li class="flex items-center gap-2">
+                    <i class="fa-solid fa-check text-windy-600 text-[10px]"></i>
+                    <span>甲殼潮間帶：弧邊招潮蟹的求偶大螯與清白招潮蟹</span>
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <i class="fa-solid fa-check text-windy-600 text-[10px]"></i>
+                    <span>奇特兩棲魚：彈塗魚用胸鰭在泥灘爬行的生存奧秘</span>
+                  </li>
+                  <li class="flex items-center gap-2">
+                    <i class="fa-solid fa-check text-windy-600 text-[10px]"></i>
+                    <span>候鳥停歇：黑面琵鷺與小水鴨的過境補給站</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-6 pt-0">
+            <button onclick="switchRouteFromOutside('xiangshan')" class="w-full bg-windy-600 hover:bg-windy-700 text-white py-2.5 rounded-xl font-bold text-xs transition-colors shadow-sm flex items-center justify-center gap-2">
+              <i class="fa-solid fa-eye"></i>
+              <span>載入此路線進行繪本體驗</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <section id="business" class="py-16 sm:py-20 bg-slate-50 border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="max-w-3xl mb-12">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-purple-100 text-purple-800 font-semibold text-xs mb-3 border border-purple-200">
+          <i class="fa-solid fa-chart-line"></i> 評分指標 25%：商業模式與永續營運機制
+        </div>
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">
+          B2C 數位訂閱印製 × B2B 竹科企業 ESG 家庭日
+        </h2>
+        <p class="text-slate-600 mt-2 text-sm sm:text-base">
+          兼具社會影響力（普及環境教育）與自我造血獲利能力，構建跨世代家庭與在地產業的雙贏循環。
+        </p>
+      </div>
+
+      <!-- Business Model Cards: B2C vs B2B/B2G -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        
+        <!-- B2C Revenue Model -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-100">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center text-lg">
+                  <i class="fa-solid fa-heart"></i>
+                </div>
+                <div>
+                  <h3 class="text-xl font-bold text-slate-900">B2C：家庭會員體驗與實體印刷</h3>
+                  <span class="text-xs text-slate-400">Freemium + Subscription + POD</span>
+                </div>
+              </div>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-brand-50 text-brand-700 font-bold">高黏著度</span>
+            </div>
+
+            <div class="space-y-4">
+              <!-- Tier 1 -->
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="font-bold text-slate-900 text-sm">日常免費體驗（Freemium）</span>
+                  <span class="text-xs font-mono font-bold text-slate-500">NT$ 0 / 月</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  每月提供 2 次數位繪本生成額度。輸出標準解析度 PDF，可下載、轉寄家族群組或分享至 Instagram 故事。
+                </p>
+              </div>
+
+              <!-- Tier 2 -->
+              <div class="p-4 rounded-2xl bg-brand-50/70 border border-brand-200">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="font-bold text-brand-950 text-sm">小探險家進階訂閱會員</span>
+                  <span class="text-xs font-mono font-bold text-brand-700">NT$ 199 / 月 (或 1,990 / 年)</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  解鎖全竹縣 13 鄉鎮特色生態線、無限制 4K 高畫質繪本產出、語音朗讀伴讀檔、專屬「童年自然成長電子足跡館」。
+                </p>
+              </div>
+
+              <!-- Tier 3 -->
+              <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="font-bold text-amber-950 text-sm">FSC 認證實體精裝繪本印製</span>
+                  <span class="text-xs font-mono font-bold text-amber-800">NT$ 599 ~ 899 / 本 (客製化)</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  旅程結束後家長一鍵下單送印。採用 100% FSC 永續林業紙張、無毒環保大豆油墨印刷，3 至 5 天宅配送達，成為書架上最有溫度的實體禮物。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-100 text-xs text-slate-500 flex items-center justify-between">
+            <span>毛利率估算：實體印刷約 45%</span>
+            <span class="text-brand-600 font-semibold"><i class="fa-solid fa-rotate-left"></i> 回購率高 (隨季節出行)</span>
+          </div>
+        </div>
+
+        <!-- B2B / B2G ESG Model -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-100">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-lg">
+                  <i class="fa-solid fa-building"></i>
+                </div>
+                <div>
+                  <h3 class="text-xl font-bold text-slate-900">B2B / B2G：竹科企業 ESG 與地方導流</h3>
+                  <span class="text-xs text-slate-400">Enterprise ESG & Local Regeneration</span>
+                </div>
+              </div>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-purple-50 text-purple-700 font-bold">高營收動能</span>
+            </div>
+
+            <div class="space-y-4">
+              <!-- B2B Pillar 1 -->
+              <div class="p-4 rounded-2xl bg-purple-50/60 border border-purple-200/80">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="font-bold text-purple-950 text-sm">竹科企業「綠色家庭日」專案採購</span>
+                  <span class="text-xs font-mono font-bold text-purple-700">專案合約制</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  瞄準台積電、聯發科等竹科企業之福委會與 ESG 永續部門。員工帶孩子參與低碳踏青，系統批量產出附有企業專屬永續 Logo 的減碳繪本，量化減碳數據可直接寫入企業 ESG 永續報告書（GRI 準則）。
+                </p>
+              </div>
+
+              <!-- B2B Pillar 2 -->
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="font-bold text-slate-900 text-sm">休閒農業與客庄特色小店導流分潤</span>
+                  <span class="text-xs font-mono font-bold text-slate-600">打卡返現 & 導流抽成</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  在繪本中嵌入在地小農工作坊、獨立書店或客家食堂的打卡探索謎題。家庭持電子繪本到店享折扣，本平台收取行銷導流分潤，帶動竹縣在地微經濟。
+                </p>
+              </div>
+
+              <!-- B2G Pillar 3 -->
+              <div class="p-4 rounded-2xl bg-windy-50/60 border border-windy-200">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="font-bold text-windy-950 text-sm">竹縣教育局 / 文化局 戶外環境教育標案</span>
+                  <span class="text-xs font-mono font-bold text-windy-700">地方創生補助</span>
+                </div>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  配合新竹縣政府永續低碳城市推廣與國小校外教學，作為數位戶外學習護照，爭取教育部 U-start 與新竹縣地方型 SBIR 研發專案支持。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-100 text-xs text-slate-500 flex items-center justify-between">
+            <span>竹科潛在企業員工數：&gt; 17 萬人</span>
+            <span class="text-purple-600 font-semibold"><i class="fa-solid fa-handshake"></i> ESG 綠色家庭福利剛需</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ESG Calculator Interactive Mini-Widget -->
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-brand-600 uppercase tracking-wider flex items-center gap-1.5">
+              <i class="fa-solid fa-calculator"></i> 企業 ESG 家庭日效益即時試算器
+            </span>
+            <h4 class="text-lg sm:text-xl font-bold text-slate-900">評估為貴公司員工舉辦低碳生態家庭日的影響力</h4>
+            <p class="text-xs text-slate-500">輸入參與家庭數，即刻估算節省碳排放與產出之客製專屬紀念繪本總量</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200 w-full md:w-auto">
+            <div>
+              <label for="familyInput" class="block text-[11px] font-semibold text-slate-500 mb-1">參與家庭組數：</label>
+              <input type="number" id="familyInput" value="120" min="10" max="2000" class="w-28 px-3 py-1.5 rounded-lg border border-slate-300 font-mono font-bold text-sm text-slate-900 focus:outline-none focus:border-brand-500">
+            </div>
+            
+            <div class="border-l border-slate-200 pl-4 space-y-0.5">
+              <div class="text-[11px] text-slate-500">預估累計減碳量</div>
+              <div class="text-lg font-black text-brand-600 font-mono"><span id="calcCarbon">384.0</span> kg CO₂e</div>
+            </div>
+
+            <div class="border-l border-slate-200 pl-4 space-y-0.5">
+              <div class="text-[11px] text-slate-500">生成企業繪本數</div>
+              <div class="text-lg font-black text-purple-600 font-mono"><span id="calcBooks">120</span> 冊</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="roadmap" class="py-16 sm:py-24 bg-white border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="max-w-3xl mb-12">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-amber-100 text-amber-800 font-semibold text-xs mb-3 border border-amber-200">
+          <i class="fa-solid fa-list-check"></i> 評分指標 15%：團隊分工與執行可行性
+        </div>
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">
+          12 個月推進期程與風險控管矩陣
+        </h2>
+        <p class="text-slate-600 mt-2 text-sm sm:text-base">
+          以每三個月為一個關鍵里程碑（Milestone），落實中文系文學轉譯與資管系工程交付。
+        </p>
+      </div>
+
+      <!-- 4 Milestones Timeline Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        
+        <!-- Milestone 1 -->
+        <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 hover:border-brand-500 transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-mono font-bold text-brand-700 bg-brand-100 px-2 py-0.5 rounded">M1 ~ M3</span>
+              <span class="text-xs text-slate-400 font-medium">概念驗證期</span>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 mb-2">原型建置與在地閉門測試</h3>
+            <ul class="text-xs text-slate-600 space-y-2 mb-4">
+              <li class="flex items-start gap-1.5">
+                <i class="fa-solid fa-circle-check text-brand-600 mt-0.5 text-[10px]"></i>
+                <span>完成 LINE 機器人原型與 TDX / Vision-LLM API 串接</span>
+              </li>
+              <li class="flex items-start gap-1.5">
+                <i class="fa-solid fa-circle-check text-brand-600 mt-0.5 text-[10px]"></i>
+                <span>竹北水圳森林公園完成 <strong>30 組家庭</strong> 實地閉門測試</span>
+              </li>
+              <li class="flex items-start gap-1.5">
+                <i class="fa-solid fa-circle-check text-brand-600 mt-0.5 text-[10px]"></i>
+                <span>確妥分齡提示詞（Prompt）童趣語音資料庫</span>
+              </li>
+            </ul>
+          </div>
+          <div class="text-[11px] text-slate-400 border-t border-slate-200/80 pt-2 font-mono">
+            目標：雛形跑通 & 競賽得獎
+          </div>
+        </div>
+
+        <!-- Milestone 2 -->
+        <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 hover:border-brand-500 transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-mono font-bold text-windy-700 bg-windy-100 px-2 py-0.5 rounded">M4 ~ M6</span>
+              <span class="text-xs text-slate-400 font-medium">育成孵化期</span>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 mb-2">架構重構與創業資源接軌</h3>
+            <ul class="text-xs text-slate-600 space-y-2 mb-4">
+              <li class="flex items-start gap-1.5">
+                <i class="fa-solid fa-circle-check text-windy-600 mt-0.5 text-[10px]"></i>
+                <span>優化自動排版引擎，生成延遲降至 <strong>30 秒內</strong></span>
+              </li>
+              <li class="flex items-start gap-1.5">
+                <i class="fa-solid fa-circle-check text-windy-600 mt-0.5 text-[10px]"></i>
+                <span>進駐大專院校創新育成中心，完成公司登記前置</span>
+              </li>
+              <li class="flex items-start gap-1.5">
+                <i class="fa-solid fa-circle-check text-windy-600 mt-0.5 text-[10px]"></i>
+                <span>送件申請教育部 U-start 與竹縣地方型 SBIR 研發補助</span>
+              </li>
+            </ul>
+          </div>
+          <div class="text-[11px] text-slate-400 border-t border-slate-200/80 pt-2 font-mono">
+            目標：獲取天使啟動資金
+          </div>
+        </div>
+
+        <!-- Milestone 3 -->
+        <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 hover:border-brand-500 transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-mono font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded">M7 ~ M9</span>
+              <span class="text-xs text-slate-400 font-medium">商業落地期</span>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 mb-2">實體印刷上線與通路合作</h3>
+            <ul class="text-xs text-slate-600 space-y-2 mb-4">
+              <li class="flex items-start gap-1.5">
+                <i class="fa-solid fa-circle-check text-amber-600 mt-0.5 text-[10px]"></i>
+                <span>串接環保印刷廠 API，正式開放 FSC 認證繪本送印</span>
+              </li>
+              <li class="flex items-start gap-1.5">
+                <i class="fa-solid fa-circle-check text-amber-600 mt-0.5 text-[10px]"></i>
+                <span>導入第三方金流，啟動月費 199 元進階會員制</span>
+              </li>
+              <li class="flex items-start gap-1.5">
+                <i class="fa-solid fa-circle-check text-amber-600 mt-0.5 text-[10px]"></i>
+                <span>新瓦屋與竹東文創小店設立實體樣書展示翻閱點</span>
+              </li>
+            </ul>
+          </div>
+          <div class="text-[11px] text-slate-400 border-t border-slate-200/80 pt-2 font-mono">
+            目標：驗證 B2C 商業變現
+          </div>
+        </div>
+
+        <!-- Milestone 4 -->
+        <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 hover:border-brand-500 transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-mono font-bold text-purple-700 bg-purple-100 px-2 py-0.5 rounded">M10 ~ M12</span>
+              <span class="text-xs text-slate-400 font-medium">規模化運營</span>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 mb-2">竹科企業鏈結與全縣拓展</h3>
+            <ul class="text-xs text-slate-600 space-y-2 mb-4">
+              <li class="flex items-start gap-1.5">
+                <i class="fa-solid fa-circle-check text-purple-600 mt-0.5 text-[10px]"></i>
+                <span>步道路線擴展至新竹縣十三鄉鎮全區古道與海岸</span>
+              </li>
+              <li class="flex items-start gap-1.5">
+                <i class="fa-solid fa-circle-check text-purple-600 mt-0.5 text-[10px]"></i>
+                <span>對接竹科 3 家指標企業福委會「ESG家庭日」採購</span>
+              </li>
+              <li class="flex items-start gap-1.5">
+                <i class="fa-solid fa-circle-check text-purple-600 mt-0.5 text-[10px]"></i>
+                <span>累計達成 <strong>5,000 冊數位繪本</strong> 與 1,000 本實體印製</span>
+              </li>
+            </ul>
+          </div>
+          <div class="text-[11px] text-slate-400 border-t border-slate-200/80 pt-2 font-mono">
+            目標：實現單月營運損益兩平
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Risk Matrix Table -->
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+        <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-shield-halved text-rose-500"></i>
+          專案風險評估與具體因應對策表
+        </h3>
+        
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs sm:text-sm">
+            <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+              <tr>
+                <th class="py-3 px-4 font-bold">風險面向</th>
+                <th class="py-3 px-4 font-bold">潛在挑戰情境</th>
+                <th class="py-3 px-4 font-bold text-brand-700">具體工程與敘事因應對策</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-slate-700">
+              <tr class="hover:bg-slate-50/50">
+                <td class="py-3.5 px-4 font-bold text-slate-900 whitespace-nowrap">
+                  <span class="w-2 h-2 rounded-full bg-amber-500 inline-block mr-1.5"></span>影像辨識準確度
+                </td>
+                <td class="py-3.5 px-4 text-slate-600">
+                  幼童手持相機可能角度傾斜、反光、手震模糊或距離過遠，導致物種置信度不足。
+                </td>
+                <td class="py-3.5 px-4 text-slate-800">
+                  設置雙層置信度閥值。若特徵難以判定，系統無縫切換至<strong>「神秘自然精靈／迷霧偵探」</strong>中文敘事框架，引導孩子繼續探索，絕不彈出錯誤代碼中斷閱讀體驗。
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-50/50">
+                <td class="py-3.5 px-4 font-bold text-slate-900 whitespace-nowrap">
+                  <span class="w-2 h-2 rounded-full bg-windy-500 inline-block mr-1.5"></span>天候與戶外依賴
+                </td>
+                <td class="py-3.5 px-4 text-slate-600">
+                  新竹冬季強勁九降風或梅雨季連續降雨，造成家長戶外步道活動意願劇降。
+                </td>
+                <td class="py-3.5 px-4 text-slate-800">
+                  規劃<strong>室內文化微旅行備案</strong>（如新竹縣縣史館、關西紅茶文化館、竹東客家戲曲公園廊道），將建築裝飾、客庄茶香與歷史展品納入室內解謎繪本庫。
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-50/50">
+                <td class="py-3.5 px-4 font-bold text-slate-900 whitespace-nowrap">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block mr-1.5"></span>實體送印時效與庫存
+                </td>
+                <td class="py-3.5 px-4 text-slate-600">
+                  若採傳統大批開模印製會面臨庫存資金積壓；若出貨過慢則影響家長紀念期待感。
+                </td>
+                <td class="py-3.5 px-4 text-slate-800">
+                  全面採用<strong>隨選即印（Print on Demand, POD）</strong>無庫存模式。與在地數位印刷廠建立 API 直連排程，維持 3 至 5 個工作天快速精裝出貨。
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="py-16 bg-slate-900 text-white relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <div class="lg:col-span-8 space-y-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/20 text-brand-300 text-xs font-semibold">
+            跨領域團隊組合
+          </div>
+          <h2 class="text-2xl sm:text-4xl font-black tracking-tight leading-snug">
+            用科技守護童年好奇，以文字點亮土地記憶
+          </h2>
+          <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl">
+            我們深知新竹家庭的育兒渴望，也珍惜這座風城山海間豐富的自然生態。我們準備好將這個結合環境教育、地方創生與前瞻技術的方案，深耕為新竹縣最動人的綠色日常。
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 text-xs">
+            <div class="bg-white/5 border border-white/10 p-3.5 rounded-xl">
+              <span class="text-amber-400 font-bold block mb-1">中文系主修成員專長</span>
+              <span class="text-slate-300">兒童文學修辭、科普白話轉譯、分齡引導敘事架構、新竹客庄文史考究。</span>
+            </div>
+            <div class="bg-white/5 border border-white/10 p-3.5 rounded-xl">
+              <span class="text-brand-400 font-bold block mb-1">資管系雙主修成員專長</span>
+              <span class="text-slate-300">TDX 交通 API 串接、Puppeteer 自動化排版流水線、LINE LIFF 全端系統維運。</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-4 flex flex-col items-center justify-center p-6 bg-white/10 backdrop-blur-md rounded-3xl border border-white/10 text-center">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-500 to-windy-500 flex items-center justify-center text-3xl mb-4 shadow-lg">
+            <i class="fa-solid fa-leaf"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-1">風城親子綠遊記</h3>
+          <p class="text-xs text-slate-300 mb-6 font-mono">WindyEco Kids System</p>
+          <a href="#demo" class="w-full bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold py-3 rounded-xl text-sm transition-all shadow-lg flex items-center justify-center gap-2">
+            <i class="fa-solid fa-play"></i>
+            <span>即刻體驗繪本生成器</span>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-slate-950 text-slate-400 py-10 border-t border-slate-800 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <p class="text-slate-300 font-semibold">風城親子綠遊記（WindyEco Kids）專案團隊</p>
+        <p class="mt-1">新竹縣大專青年低碳生態微旅行與智慧生成競賽提案計畫書</p>
+      </div>
+      <div class="text-slate-300 text-center sm:text-right">
+        <p>技術協作：中文系 × 資訊管理學系跨領域實驗室</p>
+        <p class="mt-1">符合 SDGs 4 優質教育、SDGs 11 永續城鄉與 SDGs 13 氣候行動</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- MODAL 1: FULL COLOR PICTURE BOOK VIEWER    -->
+  <!-- ========================================== -->
+  <div id="pdfModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl relative border border-slate-200 overflow-hidden">
+      
+      <!-- Top Action Bar -->
+      <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-brand-500 text-slate-950 flex items-center justify-center text-sm font-bold">
+            <i class="fa-solid fa-book-open"></i>
+          </div>
+          <div>
+            <h3 class="text-base sm:text-lg font-bold text-white flex items-center gap-2" id="modalBookTitle">
+              《小宇的大山背綠色探險記》
+            </h3>
+            <span class="text-xs text-brand-300 font-mono">全彩高畫質精裝繪本預覽冊 • 風城永續認證</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Page selector in modal -->
+          <div class="hidden sm:flex items-center gap-1 bg-slate-800 px-2 py-1 rounded-xl text-xs">
+            <button id="modalPrevPageBtn" class="px-2 py-1 hover:bg-slate-700 rounded text-slate-300">
+              <i class="fa-solid fa-arrow-left"></i> 上一頁
+            </button>
+            <span id="modalPageIndicator" class="px-2 font-mono text-amber-400 font-bold">封面</span>
+            <button id="modalNextPageBtn" class="px-2 py-1 hover:bg-slate-700 rounded text-slate-300">
+              下一頁 <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+
+          <button id="closePdfModal" aria-label="關閉預覽視窗" class="text-slate-400 hover:text-white w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center transition-colors">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Book Viewport (Interactive Single / Spread Layout) -->
+      <div class="flex-1 overflow-y-auto p-4 sm:p-8 bg-slate-100 flex items-center justify-center">
+        <div id="fullColorBookContainer" class="w-full max-w-2xl bg-[#fffdfa] rounded-3xl p-6 sm:p-10 shadow-xl border border-amber-100 paper-texture relative min-h-[480px] flex flex-col justify-between">
+          <!-- Dynamically injected full page content via JS: Cover, Page 1-4, Certificate -->
+        </div>
+      </div>
+
+      <!-- Bottom Control Bar -->
+      <div class="bg-white px-6 py-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3 shrink-0">
+        <div class="flex items-center gap-2 text-xs text-slate-500">
+          <i class="fa-solid fa-leaf text-brand-600"></i>
+          <span>採用 FSC™ 認證 100% 永續環保再生紙規格渲染</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button id="openColoringFromBookBtn" class="px-4 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 text-xs font-bold transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-palette"></i>
+            <span>下載此繪本線稿填色紙</span>
+          </button>
+          <button id="downloadPdfFakeBtn" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm">
+            <i class="fa-solid fa-print"></i>
+            <span>列印 / 存為全彩 PDF</span>
+          </button>
+          <button id="orderBookInsideBtn" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm">
+            <i class="fa-solid fa-truck-fast"></i>
+            <span>一鍵 FSC 送印送府 (NT$ 599)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL 2: PRINTABLE COLORING TEMPLATE MODAL -->
+  <!-- ========================================== -->
+  <div id="coloringModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[92vh] flex flex-col shadow-2xl relative border border-slate-200 overflow-hidden">
+      
+      <div class="bg-amber-600 text-white px-6 py-4 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-amber-400 text-slate-900 flex items-center justify-center text-sm font-bold">
+            <i class="fa-solid fa-palette"></i>
+          </div>
+          <div>
+            <h3 class="text-base sm:text-lg font-bold text-white">
+              小朋友生態手繪塗鴉填色範本（線稿下載區）
+            </h3>
+            <span class="text-xs text-amber-100">支援 A4 格式直接列印或下載圖片，供孩童手繪創作</span>
+          </div>
+        </div>
+
+        <button id="closeColoringModal" aria-label="關閉繪圖範本視窗" class="text-amber-200 hover:text-white w-8 h-8 rounded-full bg-amber-700 flex items-center justify-center transition-colors">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Coloring Sheet Canvas Preview -->
+      <div class="flex-1 overflow-y-auto p-4 sm:p-8 bg-slate-100 flex items-center justify-center">
+        <div id="printableColoringSheet" class="w-full max-w-xl bg-white p-6 sm:p-8 rounded-2xl border-2 border-dashed border-slate-300 shadow-md text-slate-900 font-sans">
+          
+          <!-- Sheet Header -->
+          <div class="border-b-2 border-slate-900 pb-3 mb-4 flex items-center justify-between">
+            <div>
+              <div class="text-[10px] font-bold tracking-widest text-slate-500 uppercase">WINDYECO KIDS ECO-ACTIVITY SHEET</div>
+              <h4 class="text-lg sm:text-xl font-black" id="coloringSheetTitle">【大山背探險】我的百年糯米橋與自然小精靈</h4>
+            </div>
+            <div class="text-right text-xs">
+              <div>小畫家姓名：________________</div>
+              <div class="mt-1 text-slate-500">日期：2026 年 ___ 月 ___ 日</div>
+            </div>
+          </div>
+
+          <!-- Printable Black & White Line Art Frame -->
+          <div class="border-2 border-slate-800 rounded-xl p-4 bg-slate-50 flex items-center justify-center min-h-[220px]">
+            <div id="coloringLineArtSvg" class="w-full max-w-md h-56 flex items-center justify-center">
+              <!-- Injected Line Art SVG -->
+            </div>
+          </div>
+
+          <!-- Child Drawing & Discovery Area -->
+          <div class="grid grid-cols-2 gap-4 mt-4 text-xs">
+            <div class="border border-slate-300 rounded-xl p-3 bg-amber-50/40">
+              <div class="font-bold text-amber-900 mb-1">🌿 今天的綠色秘密筆記：</div>
+              <p class="text-slate-600 text-[11px] leading-relaxed" id="coloringSheetFact">
+                在方框裡畫出今天看到的落葉、小蟲或泥巴腳印！糯米橋是用糯米、石灰黏起來的百年智慧喔！
+              </p>
+            </div>
+            <div class="border-2 border-dashed border-slate-300 rounded-xl p-3 flex flex-col items-center justify-center text-center text-slate-400">
+              <i class="fa-solid fa-pen-nib text-lg mb-1"></i>
+              <span class="text-[11px] font-bold">【小畫家自由發揮區】</span>
+              <span class="text-[10px]">畫出你想對小精靈說的一句話</span>
+            </div>
+          </div>
+
+          <!-- Footer Stamp -->
+          <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-500">
+            <span>風城親子綠遊記 • 竹縣親子低碳微旅行教材</span>
+            <span class="font-mono font-bold text-emerald-700">🌱 今日減碳 3.2 kg 認證</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="bg-white px-6 py-4 border-t border-slate-200 flex items-center justify-between gap-3 shrink-0">
+        <span class="text-xs text-slate-500">
+          提示：建議以家用印表機選用 A4 黑白或彩色列印
+        </span>
+        <div class="flex items-center gap-2">
+          <button id="printColoringSheetBtn" class="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-all flex items-center gap-2 shadow-sm">
+            <i class="fa-solid fa-print"></i>
+            <span>直接列印塗鴉填色範本</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-xs sm:text-sm border border-slate-700">
+    <i id="toastIcon" class="fa-solid fa-circle-check text-brand-400 text-base"></i>
+    <span id="toastMsg">通知訊息</span>
+  </div>
+
+  <script>
+    // --- Application State & Data Collections ---
+    const ROUTE_DATA = {
+      dashanbei: {
+        title: "橫山大山背騎龍古道之旅",
+        bookName: "小宇的大山背綠色探險記",
+        carbon: "3.2",
+        author: "小宇 (5歲) & 爸爸媽媽",
+        pages: [
+          {
+            id: 1,
+            title: "糯米做成的大橋？",
+            location: "大山背騎龍古道入口糯米橋",
+            photoIndex: "01",
+            photoLabel: "古樸糯米石砌拱橋",
+            photoSub: "孩子站在青苔石階旁拍下橋拱",
+            svgType: "bridge",
+            userPhoto: null,
+            junior: {
+              badge: "起：好奇的出發",
+              narrative: "小宥踩著輕快的小步伐，來到了一座彎彎的石橋前。這座橋看起來好像甜甜的糯米年糕疊起來的！微風吹過竹林，沙沙沙地唱著歌，糯米橋爺爺笑瞇瞇地挺起胸膛，守護著小溪流過了一百年呢！",
+              cardTitle: "【自然與人文解密】糯米橋好神奇！",
+              cardBody: "古時候沒有水泥，客家叔叔把糯米飯、甜甜的紅糖和石灰攪拌在一起，把一顆顆大石頭牢牢黏起來，這座橋比想像中還要堅固喔！"
+            },
+            senior: {
+              badge: "第 1 頁：起程與探古",
+              narrative: "踏上騎龍古道，迎面而來的是建於百年前的「糯米石砌橋」。這座工藝精湛的拱橋見證了橫山開墾史，沒有使用任何現代水泥，卻歷經多次大地震依然固若金湯。",
+              cardTitle: "【水土與歷史百科】糯米灰漿建築智慧",
+              cardBody: "客家先民利用生石灰、熟糯米漿與紅糖混合，製成高黏度天然有機膠凝材料。不僅大幅減少長途運輸水泥的高碳排，更有絕佳的透氣彈性與防裂耐震特性。"
+            }
+          },
+          {
+            id: 2,
+            title: "恐龍時代的巨型陽傘",
+            location: "大山背溪谷步道中段",
+            photoIndex: "02",
+            photoLabel: "溪谷邊高大的筆筒樹",
+            photoSub: "巨大羽狀複葉遮蔽陽光",
+            svgType: "tree",
+            userPhoto: null,
+            junior: {
+              badge: "承：森林裡的巨人",
+              narrative: "溪邊忽然出現一棵好高好高的大樹，它的葉子長得像一柄柄翠綠色的大羽毛，在空中撐開巨大的雨傘！小宥仰起頭驚嘆：「哇！這裡是不是恐龍最喜歡來散步的綠色城堡呢？」",
+              cardTitle: "【綠色小秘密】筆筒樹是大蕨類！",
+              cardBody: "筆筒樹長得像大樹，但它其實是「蕨類」喔！在很久很久以前，連恐龍都還沒出生時，它的祖先就已經住在地球上了呢！"
+            },
+            senior: {
+              badge: "第 2 頁：遇見活化石",
+              narrative: "轉進濕潤陰涼的溪谷，高達六公尺的筆筒樹赫然挺立眼前。老葉脫落後在樹幹表面留下一圈圈美麗的「蛇紋」葉痕，孩子屏住呼吸觀察這株橫跨中生代的生命奇蹟。",
+              cardTitle: "【植物演化百科】侏儸紀樹蕨生態",
+              cardBody: "筆筒樹（Cyathea lepifera）是冰河時期存留至今的孑遺樹蕨。它們不開花也不結種子，依靠葉片背面的孢子囊群繁衍，是台灣淺山溪谷極具國際保育指標的物種。"
+            }
+          },
+          {
+            id: 3,
+            title: "神秘的森林雙胞胎",
+            location: "騎龍古道清涼淺水坑旁",
+            photoIndex: "03",
+            photoLabel: "停在溪石邊的細長豆娘",
+            photoSub: "孩子蹲在泥土邊近距離特寫",
+            svgType: "damselfly",
+            userPhoto: null,
+            junior: {
+              badge: "轉：驚喜的悄悄話",
+              narrative: "一隻身材細細長長的藍色小精靈，悄悄停在小宥身旁的溪石上。它收起透明的小翅膀，害羞地揉揉圓滾滾的大眼睛說：「噓！我不是蜻蜓喔，我是豆娘妹妹，這條小溪好乾淨，我最喜歡在這裡跳舞了！」",
+              cardTitle: "【動物捉迷藏】豆娘與蜻蜓的密碼",
+              cardBody: "豆娘和蜻蜓是好朋友！當它們停下來休息時，豆娘會把四片翅膀乖乖合攏收在背上；蜻蜓則會把翅膀張得大大的像滑翔機喔！"
+            },
+            senior: {
+              badge: "第 3 頁：水質微觀指標",
+              narrative: "孩子在清澈的溪水邊發現了豆娘的身影。它正靜靜停歇在溪石上，細長身軀閃耀著金屬藍綠光澤。豆娘對水質極度敏感，它的現身意味著這片橫山溪谷未受任何農藥與生活廢水汙染。",
+              cardTitle: "【水質生態指標】豆娘棲地價值",
+              cardBody: "豆娘幼蟲（水蠆）具有三片尾鰓，只生長在含氧量極高的無汙染水域。它是水質健康與河川生態鏈中極關鍵的環境指標生物，協助維持食物網平衡。"
+            }
+          },
+          {
+            id: 4,
+            title: "滿載回憶的綠色返程",
+            location: "台鐵內灣線回程電車",
+            photoIndex: "04",
+            photoLabel: "全家在內灣彩繪車廂合照",
+            photoSub: "孩子手拿集章護照笑開懷",
+            svgType: "train",
+            userPhoto: null,
+            junior: {
+              badge: "合：甜甜的晚安曲",
+              narrative: "嘟！嘟！電車開動了！小宥靠在媽媽的肩膀上，翻看著今天拍下的大橋、筆筒樹和小豆娘。窗外的青山慢慢向後跑，小宥笑著說：「今天跟著火車一起散步，地球媽媽一定很開心！」",
+              cardTitle: "【環保小英雄】我們減少了碳排！",
+              cardBody: "今天全家人搭乘火車和走路探險，沒有讓汽車排黑煙，一共幫地球省下了 3.2 公斤的碳！我們都是最棒的綠色小衛士！"
+            },
+            senior: {
+              badge: "第 4 頁：旅程結語與收穫",
+              narrative: "午後的陽光灑進台鐵內灣線支線車廂。孩子在數位繪本上看見自己一路上傳的照片，已自動串聯成一篇兼具歷史、生物演化與土地關懷的成長日記，為這趟低碳週末畫下溫馨句點。",
+              cardTitle: "【永續發展 SDGs】綠色交通實踐",
+              cardBody: "本趟微旅行善用軌道運輸與步行網絡，相較傳統自駕往返減少 3.2 kg CO₂e。將生活減碳轉化為家庭親密記憶，具體實踐 SDGs 11 與 SDGs 13 核心願景。"
+            }
+          }
+        ]
+      },
+      xinwawu: {
+        title: "竹北水圳客庄生態微散步",
+        bookName: "小涵的新瓦屋水圳奇遇記",
+        carbon: "2.4",
+        author: "小涵 (6歲) & 媽媽",
+        pages: [
+          {
+            id: 1,
+            title: "綠色小帆船與落羽松",
+            location: "竹北水圳森林公園生態池",
+            photoIndex: "01",
+            photoLabel: "水圳邊落羽松與池中浮葉",
+            photoSub: "一片金黃羽狀複葉漂浮水面",
+            svgType: "bridge",
+            userPhoto: null,
+            junior: {
+              badge: "起：水波上的小精靈",
+              narrative: "今天，小涵在新瓦屋的小溪邊發現了一艘艘『綠色小帆船』，那是樟樹和小草的葉子在風中飄呀飄。池邊高高的落羽松叔叔笑著落下一片片金黃羽毛，好像在向大家招手問好呢！",
+              cardTitle: "【植物解密】落羽松不是松樹！",
+              cardBody: "落羽松雖然名字有個『松』，但它其實是杉木家族喔！一到了秋冬，它的細細小葉子就會像鳥羽毛一樣飄落，非常美麗！"
+            },
+            senior: {
+              badge: "第 1 頁：都會綠洲啟程",
+              narrative: "漫步在竹北高鐵新市鎮旁的水圳森林公園，水渠倒映著高樓與落羽松林。這條古老的水圳曾是孕育竹北平原的農業大動脈，如今轉型為科技城中最珍貴的生態廊道。",
+              cardTitle: "【水利文化百科】竹北六家水圳史",
+              cardBody: "六家水圳源自頭前溪，百年前先民開鑿水圳灌溉千畝良田。水圳兩側植栽與跌水設計，可調節城市熱島效應，提供水鳥良好棲息地。"
+            }
+          },
+          {
+            id: 2,
+            title: "黑面番鴨船長來了！",
+            location: "新瓦屋生態水圳池畔",
+            photoIndex: "02",
+            photoLabel: "游過水面的黑面番鴨",
+            photoSub: "紅色臉頰與深色羽毛特寫",
+            svgType: "damselfly",
+            userPhoto: null,
+            junior: {
+              badge: "承：水面上的大巡警",
+              narrative: "忽然，『呱！呱！呱！』一隻穿著深黑色西裝的番鴨船長游過來了！它晃著紅紅圓圓的臉頰，啪嗒啪嗒地在水裡踢水，輕輕跟小涵招招手，好像在巡邏這片安靜的小池塘。",
+              cardTitle: "【水禽好朋友】番鴨紅紅的臉",
+              cardBody: "番鴨的臉頰上有一層紅紅凸凸的肉瘤，看起來很有精神！它很會游泳，腳上的蹼就像是天生的小蛙鞋喔！"
+            },
+            senior: {
+              badge: "第 2 頁：水塘生機",
+              narrative: "在新瓦屋的池塘旁，番鴨悠閒地划動雙蹼。它的羽毛具備極佳的疏水油脂，能在水面輕盈漂浮。水池中的水草與小魚為它提供了充裕的覓食資源。",
+              cardTitle: "【鳥類適應百科】水鳥羽毛與尾脂腺",
+              cardBody: "水禽常以喙梳理羽毛，將尾脂腺分泌的油脂均勻塗抹在全身，形成天然防水防寒層，使它們在寒冷冬日也能自在浮游覓食。"
+            }
+          },
+          {
+            id: 3,
+            title: "老水車旋轉的秘密",
+            location: "新瓦屋傳統木製水車",
+            photoIndex: "03",
+            photoLabel: "古法水車引水灌溉構造",
+            photoSub: "潺潺流水帶動木軸旋轉",
+            svgType: "tree",
+            userPhoto: null,
+            junior: {
+              badge: "轉：旋轉的木輪大玩具",
+              narrative: "咕嚕嚕！咕嚕嚕！一個大大的木頭輪子在溪水裡轉呀轉，把清涼的溪水一杓杓舀起來倒進竹管裡。小涵拍著手說：「哇！水車爺爺不用吃電池，喝水就能一直轉，真厲害！」",
+              cardTitle: "【神奇力學】水流的推力",
+              cardBody: "流動的水有很大的力量喔！只要聰明地放上木板，水流推著木板走，水車就能不停轉動，幫農夫伯伯把水送到高高的地方！"
+            },
+            senior: {
+              badge: "第 3 頁：古老綠色動力",
+              narrative: "這座復刻傳統工藝的木製筒車，生動展示了物理力學。藉由溪水落差的重力與浮力推動葉輪，將低處水流自動提引至高處農田，完全不消耗一滴化石燃料。",
+              cardTitle: "【農業工程百科】古法筒車與低碳灌溉",
+              cardBody: "水車是早期客家農業的自控工程智慧。運用流體動能轉化為機械旋轉功，是人類早期綠色能源應用的典範代表。"
+            }
+          },
+          {
+            id: 4,
+            title: "客家老屋的新生命",
+            location: "新瓦屋忠孝堂前禾埕",
+            photoIndex: "04",
+            photoLabel: "紅磚泥磚合院建築合照",
+            photoSub: "孩子在禾埕紅磚地上奔跑",
+            svgType: "train",
+            userPhoto: null,
+            junior: {
+              badge: "合：在老房子院子捉迷藏",
+              narrative: "最後，小涵來到了紅紅磚頭砌成的大合院。陽光照在禾埕上暖洋洋的，古老的老屋好像慈祥的阿公阿婆，抱著許多小朋友的笑聲。今天真是快樂的竹北綠色大冒險！",
+              cardTitle: "【泥磚老屋的呼吸】冬暖夏涼",
+              cardBody: "以前的房子是用泥土、稻草和米糠做成的『泥磚』蓋的，夏天很涼快，冬天很溫暖，是非常愛護地球的綠房子喔！"
+            },
+            senior: {
+              badge: "第 4 頁：人文聚落創生結語",
+              narrative: "坐在新瓦屋的禾埕上，回望這座被現代竹北高樓環抱的客家聚落。這段僅靠步行與 YouBike 串連的旅程，讓孩子在科技與歷史的交會點，體會人文厚度。",
+              cardTitle: "【文化資產與減碳】聚落保存效益",
+              cardBody: "新瓦屋是全台第一處客家文化保存區。本日步行與單車散步共減碳 2.4 kg，展現都會生活與文化生態共生共融的無限可能。"
+            }
+          }
+        ]
+      },
+      xiangshan: {
+        title: "香山海岸潮汐與甲殼探索",
+        bookName: "阿齊的香山濕地追蟹記",
+        carbon: "2.8",
+        author: "阿齊 (7歲) & 爸爸",
+        pages: [
+          {
+            id: 1,
+            title: "香山百年木造老月台",
+            location: "台鐵香山火車站出站口",
+            photoIndex: "01",
+            photoLabel: "日式全檜木構造老車站",
+            photoSub: "孩子撫摸車站檜木柱頭",
+            svgType: "train",
+            userPhoto: null,
+            junior: {
+              badge: "起：香噴噴的木頭車站",
+              narrative: "叮咚！火車在一個古樸典雅的木頭小站停下來了。阿齊一走出車門，就聞到了淡淡的木頭香味。這座老車站已經將近一百歲了，它笑笑地看著每一趟綠色出發的火車。",
+              cardTitle: "【建築小秘密】阿里山檜木蓋的！",
+              cardBody: "香山車站是全台灣少數用阿里山珍貴檜木蓋起來的車站喔！木頭很耐用，過了快一百年還很堅固，散發著大自然的味道！"
+            },
+            senior: {
+              badge: "第 1 頁：鐵道文資啟程",
+              narrative: "抵達香山車站，眼前的入母屋造（歇山頂）全檜木建築散發古典靜謐氛圍。自 1928 年興建至今，它見證了海線鐵路的繁榮，是全台僅存的木造海線車站珍寶。",
+              cardTitle: "【鐵道文資百科】香山驛工藝特點",
+              cardBody: "香山車站使用阿里山紅檜木料，卯榫結構精密，具備優異耐腐與抗潮特性，為新竹市定古蹟與低碳軌道旅遊的黃金起點。"
+            }
+          },
+          {
+            id: 2,
+            title: "招潮蟹揮動的大大白螯",
+            location: "香山濕地心形賞蟹步道",
+            photoIndex: "02",
+            photoLabel: "泥灘地揮螯的弧邊招潮蟹",
+            photoSub: "巨大的白色大螯極為搶眼",
+            svgType: "damselfly",
+            userPhoto: null,
+            junior: {
+              badge: "承：泥巴灘上的舉重大王",
+              narrative: "走到彎彎的心形步道上，阿齊指著泥灘大喊：「哇！好多小螃蟹戴著白色的拳擊手套在打招呼耶！」這隻招潮蟹用力揮動比身體還大的大鉗子，好像在跟海風比力氣！",
+              cardTitle: "【螃蟹捉迷藏】為什麼只有一隻大鉗子？",
+              cardBody: "招潮蟹男生才有一隻超級巨大的大螯喔！那是它用來保護家園和吸引女生的秘密武器；另一隻小螯則是用來抓泥巴找食物吃的！"
+            },
+            senior: {
+              badge: "第 2 頁：潮間帶求偶交響樂",
+              narrative: "退潮後的香山濕地宛如巨幅泥質畫布。萬蟹齊出，弧邊招潮蟹與清白招潮蟹在各自的洞口旁有節奏地揮舞大螯，展現複雜而精細的視覺求偶與領地爭奪訊號。",
+              cardTitle: "【甲殼動物學】招潮蟹形態與擬態",
+              cardBody: "雄性招潮蟹的特化巨大螯足重達體重的一半。招潮蟹以泥灘有機質、微細藻類為食，經過濾食後吐出的泥沙小球稱為「擬糞」，有助翻鬆濕地底質。"
+            }
+          },
+          {
+            id: 3,
+            title: "泥灘地上的跳水冠軍彈塗魚",
+            location: "香山濕地紅樹林交界水漥",
+            photoIndex: "03",
+            photoLabel: "在泥灘爬行的彈塗魚",
+            photoSub: "胸鰭支撐身軀在泥面滑行",
+            svgType: "bridge",
+            userPhoto: null,
+            junior: {
+              badge: "轉：會走路的泥巴怪魚",
+              narrative: "撲通！一隻圓滾滾、眼睛凸凸的小怪魚，居然不在水裡游泳，而是用小手臂在泥巴地上『啪啪啪』地跳來跳去！阿齊瞪大眼睛說：「這隻魚怎麼會爬樹跟跳泥巴呀？」",
+              cardTitle: "【魚類特異功能】彈塗魚不怕離開水",
+              cardBody: "彈塗魚雖然是魚，但它可以用濕濕的皮膚和腮巴呼吸，胸前的鰭長得像小手臂一樣有力，所以能像青蛙一樣在泥巴地上蹦蹦跳跳喔！"
+            },
+            senior: {
+              badge: "第 3 頁：兩棲過渡的奇蹟",
+              narrative: "在退潮潮溝邊，孩子觀察到了彈塗魚特殊的運動型態。它演化出的肉質胸鰭能支撐身體，在濕潤泥灘上如兩棲類般爬行甚至跳躍，展示了脊椎動物登陸演化的關鍵適應步驟。",
+              cardTitle: "【生理演化百科】彈塗魚的陸棲適應機制",
+              cardBody: "彈塗魚具備膨大的鰓腔能儲存水分，並透過微血管密布的皮膚輔助呼吸。其凸出頭頂的球狀眼球具有廣角視野，能隨時警戒岸邊涉禽捕食。"
+            }
+          },
+          {
+            id: 4,
+            title: "金黃色的香山風車海夕陽",
+            location: "17公里海岸線自行車道終點",
+            photoIndex: "04",
+            photoLabel: "風力發電機與夕陽餘暉合影",
+            photoSub: "全家人推著單車在海堤留影",
+            svgType: "tree",
+            userPhoto: null,
+            junior: {
+              badge: "合：大風車轉出晚霞",
+              narrative: "呼呼呼！巨大的白色風車在海風中慢慢旋轉，太陽公公把海面染成了一片金黃色。阿齊和爸爸媽媽並肩牽著腳踏車，海風吹在臉上涼涼的，心裡裝滿了螃蟹和跳跳魚的故事。",
+              cardTitle: "【風的力量】乾淨的大風車",
+              cardBody: "新竹的風很大，但大風可以推動白色大風車旋轉發電，給我們的家裡吹電風扇和開燈，是一點都不會汙染空氣的綠色魔法喔！"
+            },
+            senior: {
+              badge: "第 4 頁：綠能與海岸保育反思",
+              narrative: "暮色中，一排排巨型離岸風力發電機在金黃晚霞中沉穩轉動。這趟香山低碳之旅，讓孩子親眼目睹了濕地生命力與再生能源實踐，在心中播下一顆深刻的永續種子。",
+              cardTitle: "【淨零轉型】風力發電與綠色碳匯",
+              cardBody: "香山沿海得益於強勁東北季風，為台灣發展陸域與離岸風電之核心場域；廣袤濕地更是重要「藍碳」儲存庫，碳匯能力高於陸地森林。"
+            }
+          }
+        ]
+      }
+    };
+
+    // State variables
+    let currentRouteKey = 'dashanbei';
+    let currentAgeMode = 'junior'; // 'junior' (3-6) or 'senior' (7-10)
+    let currentPageIndex = 0; // 0 to 3
+    let modalCurrentView = 0; // 0 = Cover, 1..4 = Pages, 5 = Certificate
+
+    // Black & white line art SVG generator for the Coloring Sheet
+    function getLineArtSvg(svgType) {
+      if (svgType === 'bridge') {
+        return `
+          <svg viewBox="0 0 320 200" class="w-full h-full" fill="none" stroke="#1e293b" stroke-width="2" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 0 160 Q 160 170 320 155" stroke-dasharray="4 4"/>
+            <path d="M 0 175 Q 160 185 320 170" stroke-dasharray="4 4"/>
+            <!-- Stone Arch Bridge -->
+            <path d="M 30 150 C 90 90, 230 90, 290 150 L 305 155 C 240 70, 80 70, 15 155 Z" stroke-width="2.5"/>
+            <!-- Stones on bridge -->
+            <circle cx="80" cy="120" r="4" fill="none"/>
+            <circle cx="120" cy="100" r="4" fill="none"/>
+            <circle cx="160" cy="95" r="4" fill="none"/>
+            <circle cx="200" cy="100" r="4" fill="none"/>
+            <circle cx="240" cy="120" r="4" fill="none"/>
+            <!-- Cute Sun -->
+            <circle cx="260" cy="45" r="18"/>
+            <circle cx="254" cy="42" r="2" fill="#1e293b"/>
+            <circle cx="266" cy="42" r="2" fill="#1e293b"/>
+            <path d="M 254 50 Q 260 54 266 50"/>
+            <line x1="260" y1="20" x2="260" y2="12"/>
+            <line x1="285" y1="45" x2="295" y2="45"/>
+            <!-- Water ripples & plants -->
+            <path d="M 40 180 C 60 175, 80 185, 100 180"/>
+            <path d="M 180 185 C 200 180, 220 190, 240 185"/>
+            <!-- Cute frog / stone sprite -->
+            <ellipse cx="70" cy="145" r="10" ry="7"/>
+            <circle cx="66" cy="138" r="2"/>
+            <circle cx="74" cy="138" r="2"/>
+          </svg>
+        `;
+      } else if (svgType === 'tree') {
+        return `
+          <svg viewBox="0 0 320 200" class="w-full h-full" fill="none" stroke="#1e293b" stroke-width="2" xmlns="http://www.w3.org/2000/svg">
+            <!-- Tree trunk with fern diamond patterns -->
+            <path d="M 152 200 Q 155 120 160 70 L 168 70 Q 165 120 168 200 Z" stroke-width="2.5"/>
+            <polygon points="158,95 162,90 166,95 162,100"/>
+            <polygon points="158,125 162,120 166,125 162,130"/>
+            <polygon points="158,155 162,150 166,155 162,160"/>
+            <!-- Fronds -->
+            <path d="M 164 70 Q 110 50 40 75" stroke-width="2.5"/>
+            <path d="M 164 70 Q 120 25 70 30" stroke-width="2.5"/>
+            <path d="M 164 70 Q 164 15 164 20" stroke-width="2"/>
+            <path d="M 164 70 Q 210 25 260 30" stroke-width="2.5"/>
+            <path d="M 164 70 Q 220 50 280 75" stroke-width="2.5"/>
+            <!-- Little Dinosaur outline -->
+            <circle cx="80" cy="165" r="14"/>
+            <circle cx="76" cy="162" r="2" fill="#1e293b"/>
+            <path d="M 76 170 Q 80 174 84 170"/>
+            <path d="M 68 175 Q 55 175 50 185"/>
+          </svg>
+        `;
+      } else if (svgType === 'damselfly') {
+        return `
+          <svg viewBox="0 0 320 200" class="w-full h-full" fill="none" stroke="#1e293b" stroke-width="2" xmlns="http://www.w3.org/2000/svg">
+            <!-- Rock -->
+            <ellipse cx="160" cy="155" rx="70" ry="25" stroke-width="2"/>
+            <!-- Damselfly Body -->
+            <path d="M 160 115 L 160 50" stroke-width="3"/>
+            <circle cx="160" cy="120" r="6"/>
+            <circle cx="154" cy="122" r="4"/>
+            <circle cx="166" cy="122" r="4"/>
+            <circle cx="153" cy="122" r="1.5" fill="#1e293b"/>
+            <circle cx="165" cy="122" r="1.5" fill="#1e293b"/>
+            <!-- Folded wings -->
+            <path d="M 160 115 C 175 90, 175 60, 162 50 C 160 60, 160 90, 160 115 Z" stroke-width="2"/>
+            <!-- Lotus leaf & bubbles -->
+            <ellipse cx="60" cy="165" rx="25" ry="10"/>
+            <circle cx="230" cy="80" r="4"/>
+            <circle cx="245" cy="65" r="6"/>
+          </svg>
+        `;
+      } else {
+        return `
+          <svg viewBox="0 0 320 200" class="w-full h-full" fill="none" stroke="#1e293b" stroke-width="2" xmlns="http://www.w3.org/2000/svg">
+            <line x1="0" y1="170" x2="320" y2="170" stroke-width="2"/>
+            <line x1="0" y1="185" x2="320" y2="185" stroke-width="2"/>
+            <!-- Train Body -->
+            <rect x="70" y="70" width="180" height="90" rx="14" stroke-width="2.5"/>
+            <rect x="85" y="85" width="40" height="30" rx="4"/>
+            <rect x="140" y="85" width="40" height="30" rx="4"/>
+            <rect x="195" y="85" width="35" height="30" rx="4"/>
+            <!-- Wheels -->
+            <circle cx="105" cy="165" r="10" stroke-width="2"/>
+            <circle cx="215" cy="165" r="10" stroke-width="2"/>
+            <!-- Train smile -->
+            <circle cx="220" cy="125" r="3" fill="#1e293b"/>
+            <path d="M 205 135 Q 220 145 235 135"/>
+          </svg>
+        `;
+      }
+    }
+
+    // SVG graphics generator for realistic illustrations
+    function getSvgIllustration(type) {
+      if (type === 'bridge') {
+        return `
+          <svg viewBox="0 0 320 240" class="w-full h-full drop-shadow-sm" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="320" height="240" fill="#ecfdf5"/>
+            <path d="M0 180 C 80 170, 160 210, 320 185 L 320 240 L 0 240 Z" fill="#99f6e4"/>
+            <path d="M0 200 C 120 190, 200 220, 320 205 L 320 240 L 0 240 Z" fill="#5eead4"/>
+            <path d="M 40 180 C 100 110, 220 110, 280 180 L 300 185 C 230 90, 90 90, 20 185 Z" fill="#78716c"/>
+            <path d="M 50 170 C 110 120, 210 120, 270 170" stroke="#d6d3d1" stroke-width="5" stroke-dasharray="6 4"/>
+            <circle cx="80" cy="145" r="4" fill="#57534e"/>
+            <circle cx="160" cy="115" r="5" fill="#57534e"/>
+            <circle cx="240" cy="145" r="4" fill="#57534e"/>
+            <path d="M 120 125 C 130 115, 150 115, 165 122" stroke="#4ade80" stroke-width="4" stroke-linecap="round"/>
+            <path d="M 210 135 C 220 130, 230 132, 240 140" stroke="#22c55e" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="270" cy="50" r="22" fill="#fde047"/>
+            <circle cx="265" cy="46" r="2" fill="#713f12"/>
+            <circle cx="275" cy="46" r="2" fill="#713f12"/>
+            <path d="M 264 54 Q 270 58 276 54" stroke="#713f12" stroke-width="2" stroke-linecap="round"/>
+            <path d="M 90 60 Q 98 52 106 60 Q 114 52 122 60" stroke="#0f766e" stroke-width="2" fill="none"/>
+            <text x="160" y="225" font-size="11" font-family="'Noto Sans TC', sans-serif" font-weight="bold" fill="#0f766e" text-anchor="middle">清澈小溪 × 百年客家糯米石拱橋</text>
+          </svg>
+        `;
+      } else if (type === 'tree') {
+        return `
+          <svg viewBox="0 0 320 240" class="w-full h-full drop-shadow-sm" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="320" height="240" fill="#fefce8"/>
+            <path d="M 0 0 L 140 240 L 90 240 Z" fill="#fef08a" opacity="0.4"/>
+            <path d="M 120 0 L 260 240 L 220 240 Z" fill="#fef08a" opacity="0.3"/>
+            <path d="M 150 240 Q 155 140 160 80 L 170 80 Q 165 140 170 240 Z" fill="#854d0e"/>
+            <polygon points="158,110 162,105 166,110 162,115" fill="#fef08a"/>
+            <polygon points="158,135 162,130 166,135 162,140" fill="#fef08a"/>
+            <polygon points="159,165 163,160 167,165 163,170" fill="#fef08a"/>
+            <path d="M 165 80 Q 100 60 40 90" stroke="#15803d" stroke-width="6" stroke-linecap="round"/>
+            <path d="M 165 80 Q 120 30 70 35" stroke="#16a34a" stroke-width="6" stroke-linecap="round"/>
+            <path d="M 165 80 Q 165 15 165 20" stroke="#22c55e" stroke-width="5" stroke-linecap="round"/>
+            <path d="M 165 80 Q 210 30 260 35" stroke="#16a34a" stroke-width="6" stroke-linecap="round"/>
+            <path d="M 165 80 Q 230 60 285 90" stroke="#15803d" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="80" cy="195" r="16" fill="#86efac"/>
+            <circle cx="75" cy="192" r="2" fill="#065f46"/>
+            <circle cx="85" cy="192" r="2" fill="#065f46"/>
+            <path d="M 76 200 Q 80 204 84 200" stroke="#065f46" stroke-width="2"/>
+            <text x="160" y="225" font-size="11" font-family="'Noto Sans TC', sans-serif" font-weight="bold" fill="#3f6212" text-anchor="middle">侏儸紀活化石：筆筒樹綠色陽傘</text>
+          </svg>
+        `;
+      } else if (type === 'damselfly') {
+        return `
+          <svg viewBox="0 0 320 240" class="w-full h-full drop-shadow-sm" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="320" height="240" fill="#f0f9ff"/>
+            <ellipse cx="160" cy="190" rx="90" ry="20" stroke="#bae6fd" stroke-width="2" fill="none"/>
+            <ellipse cx="160" cy="190" rx="50" ry="10" stroke="#7dd3fc" stroke-width="2" fill="none"/>
+            <ellipse cx="160" cy="180" rx="65" ry="25" fill="#94a3b8"/>
+            <ellipse cx="155" cy="176" rx="55" ry="18" fill="#cbd5e1"/>
+            <path d="M 160 125 L 160 60" stroke="#0284c7" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="160" cy="70" r="1.5" fill="#38bdf8"/>
+            <circle cx="160" cy="85" r="1.5" fill="#38bdf8"/>
+            <circle cx="160" cy="100" r="1.5" fill="#38bdf8"/>
+            <circle cx="160" cy="130" r="7" fill="#0369a1"/>
+            <circle cx="153" cy="132" r="5" fill="#0284c7"/>
+            <circle cx="167" cy="132" r="5" fill="#0284c7"/>
+            <circle cx="152" cy="132" r="2" fill="#ffffff"/>
+            <circle cx="166" cy="132" r="2" fill="#ffffff"/>
+            <path d="M 160 125 C 175 100, 175 70, 162 60 C 160 70, 160 100, 160 125 Z" fill="#e0f2fe" stroke="#38bdf8" stroke-width="1.5" opacity="0.8"/>
+            <path d="M 230 80 L 235 90 L 245 95 L 235 100 L 230 110 L 225 100 L 215 95 L 225 90 Z" fill="#fbbf24"/>
+            <text x="160" y="225" font-size="11" font-family="'Noto Sans TC', sans-serif" font-weight="bold" fill="#0369a1" text-anchor="middle">合攏翅膀的清澈水質精靈：豆娘</text>
+          </svg>
+        `;
+      } else {
+        return `
+          <svg viewBox="0 0 320 240" class="w-full h-full drop-shadow-sm" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="320" height="240" fill="#f8fafc"/>
+            <path d="M 0 200 L 320 200" stroke="#64748b" stroke-width="4"/>
+            <path d="M 0 215 L 320 215" stroke="#64748b" stroke-width="4"/>
+            <line x1="30" y1="195" x2="30" y2="220" stroke="#475569" stroke-width="3"/>
+            <line x1="80" y1="195" x2="80" y2="220" stroke="#475569" stroke-width="3"/>
+            <line x1="130" y1="195" x2="130" y2="220" stroke="#475569" stroke-width="3"/>
+            <line x1="180" y1="195" x2="180" y2="220" stroke="#475569" stroke-width="3"/>
+            <line x1="230" y1="195" x2="230" y2="220" stroke="#475569" stroke-width="3"/>
+            <line x1="280" y1="195" x2="280" y2="220" stroke="#475569" stroke-width="3"/>
+            <rect x="70" y="80" width="180" height="100" rx="16" fill="#10b981"/>
+            <rect x="85" y="95" width="45" height="35" rx="6" fill="#ecfdf5"/>
+            <rect x="140" y="95" width="45" height="35" rx="6" fill="#ecfdf5"/>
+            <rect x="195" y="95" width="40" height="35" rx="6" fill="#ecfdf5"/>
+            <circle cx="105" cy="110" r="8" fill="#fbbf24"/>
+            <circle cx="215" cy="145" r="4" fill="#ffffff"/>
+            <path d="M 200 155 Q 215 168 230 155" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="40" cy="120" r="30" fill="#bbf7d0"/>
+            <circle cx="290" cy="110" r="35" fill="#86efac"/>
+            <text x="160" y="232" font-size="11" font-family="'Noto Sans TC', sans-serif" font-weight="bold" fill="#047857" text-anchor="middle">低碳台鐵支線：為地球減碳前進</text>
+          </svg>
+        `;
+      }
+    }
+
+    // Render left column photo list
+    function renderPhotoList() {
+      const container = document.getElementById('photoListContainer');
+      const route = ROUTE_DATA[currentRouteKey];
+      document.getElementById('photoCount').textContent = route.pages.length;
+      
+      container.innerHTML = '';
+      route.pages.forEach((page, idx) => {
+        const isSelected = idx === currentPageIndex;
+        const item = document.createElement('div');
+        item.className = `p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
+          isSelected 
+            ? 'bg-brand-50 border-brand-500 shadow-sm' 
+            : 'bg-white border-slate-200/90 hover:border-slate-300'
+        }`;
+        
+        item.onclick = () => {
+          currentPageIndex = idx;
+          updateBookPreview();
+          renderPhotoList();
+        };
+
+        const hasCustomPhoto = !!page.userPhoto;
+
+        item.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 rounded-xl font-mono text-xs font-bold flex items-center justify-center ${
+              isSelected ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-600'
+            }">
+              0${idx + 1}
+            </span>
+            <div>
+              <div class="text-xs font-bold text-slate-800 line-clamp-1 flex items-center gap-1.5">
+                ${page.photoLabel}
+                ${hasCustomPhoto ? '<span class="text-[9px] bg-emerald-100 text-emerald-800 px-1.5 py-0.2 rounded font-bold">自訂照</span>' : ''}
+              </div>
+              <div class="text-[10px] text-slate-400 line-clamp-1">${page.location}</div>
+            </div>
+          </div>
+          <div class="text-right shrink-0">
+            <span class="inline-block px-1.5 py-0.5 rounded text-[10px] ${
+              isSelected ? 'bg-brand-200/60 text-brand-800 font-bold' : 'text-slate-400'
+            }">
+              ${isSelected ? '當前頁面' : '檢視'}
+            </span>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    // Update Book Preview Area based on current state
+    function updateBookPreview() {
+      const route = ROUTE_DATA[currentRouteKey];
+      const page = route.pages[currentPageIndex];
+      const modeData = currentAgeMode === 'junior' ? page.junior : page.senior;
+
+      // Update text & graphics
+      document.getElementById('bookBadge').textContent = modeData.badge;
+      document.getElementById('bookBadge').className = `inline-block px-2.5 py-0.5 rounded-full text-xs font-bold mb-1 ${
+        currentAgeMode === 'junior' ? 'bg-amber-100 text-amber-900' : 'bg-windy-100 text-windy-900'
+      }`;
+
+      document.getElementById('bookPageTitle').textContent = page.title;
+      document.getElementById('pageIndicator').textContent = `頁數 ${currentPageIndex + 1} / ${route.pages.length}`;
+      document.getElementById('photoLocationTag').textContent = page.location;
+      document.getElementById('photoIndexTag').textContent = `0${currentPageIndex + 1}`;
+      
+      const graphicContainer = document.getElementById('illustrationGraphic');
+      const sourceLabel = document.getElementById('imageSourceLabel');
+      const statusBox = document.getElementById('userPhotoStatus');
+
+      // Check if user has uploaded/pasted their own image for this page
+      if (page.userPhoto) {
+        graphicContainer.innerHTML = `
+          <img src="${page.userPhoto}" alt="User Footprint" class="w-full h-full object-cover rounded-xl" />
+        `;
+        sourceLabel.innerHTML = `✨ <strong class="text-emerald-700">民眾自行上傳/貼上之真實照片</strong> × 中文系故事轉譯`;
+        statusBox.classList.remove('hidden');
+      } else {
+        graphicContainer.innerHTML = getSvgIllustration(page.svgType);
+        sourceLabel.textContent = `📷 小朋友隨手拍攝真實照片 × AI 童趣插畫合成`;
+        statusBox.classList.add('hidden');
+      }
+
+      document.getElementById('storyNarrative').textContent = modeData.narrative;
+      document.getElementById('cardKnowledgeTitle').textContent = modeData.cardTitle;
+      document.getElementById('cardKnowledgeBody').textContent = modeData.cardBody;
+      document.getElementById('carbonStat').textContent = route.carbon;
+
+      // Update pagination buttons
+      document.getElementById('prevPageBtn').disabled = currentPageIndex === 0;
+      document.getElementById('nextPageBtn').disabled = currentPageIndex === route.pages.length - 1;
+    }
+
+    // Process an image (File or Data URL) uploaded or pasted by user
+    function handleUserImage(imageDataUrl, filename = "民眾上傳照片") {
+      const route = ROUTE_DATA[currentRouteKey];
+      const page = route.pages[currentPageIndex];
+
+      // Save user photo
+      page.userPhoto = imageDataUrl;
+      page.photoLabel = `我的生活足跡 (${filename.slice(0, 12)})`;
+
+      // Smart prompt modification based on user upload
+      if (currentAgeMode === 'junior') {
+        page.junior.narrative = `你看你看！小宥拍下了這張精彩的照片（${page.photoLabel}）。大自然裡充滿了神奇的形狀與顏色，小腳步停下來，發現了平時沒注意到的神秘小驚喜！風兒吹過身旁，好像在為小朋友的大發現拍手歡呼呢！`;
+        page.junior.cardTitle = `【小博士眼睛亮晶晶】發現身邊的自然美`;
+        page.junior.cardBody = `隨手拍下的這張照片，留下了親子同行最棒的回憶！用溫暖好奇的眼睛看世界，處處都是會說故事的自然課本喔！`;
+      } else {
+        page.senior.narrative = `孩子用鏡頭捕捉到了這處獨特的場景。這幅影像記錄了本次低碳旅程的即時觀測，展現了孩童獨立探索土地肌理的敏銳觀察力。在科技鏡頭下，自然地景與家庭時光在此刻深刻交融。`;
+        page.senior.cardTitle = `【微觀觀察筆記】探索精神與環境感知`;
+        page.senior.cardBody = `透過手機隨拍影像進行生物多樣性與環境特徵解構，能訓練孩子從「觀察、提問、假設到推論」的科學素養，建立珍愛土地的綠色價值觀。`;
+      }
+
+      updateBookPreview();
+      renderPhotoList();
+      showToast(`已成功貼上您的照片！已自動為您產製專屬繪本章節！`, 'wand-magic-sparkles');
+    }
+
+    // Trigger simulation of prompt re-generation
+    function simulateRegeneration() {
+      const storyEl = document.getElementById('storyNarrative');
+      storyEl.innerHTML = `<span class="inline-flex items-center gap-2 text-slate-400 font-sans text-xs"><i class="fa-solid fa-spinner fa-spin text-brand-600"></i> 中文系分齡敘事 Prompt 解析重構中 (300ms)...</span>`;
+      
+      setTimeout(() => {
+        updateBookPreview();
+        showToast('已依據當前年齡層與照片語意重新演算情節！', 'sparkles');
+      }, 450);
+    }
+
+    // Switch Route Handler
+    function setRoute(routeKey) {
+      currentRouteKey = routeKey;
+      currentPageIndex = 0;
+      
+      // Update scenario buttons style
+      document.querySelectorAll('.scenario-btn').forEach(btn => {
+        btn.classList.remove('active', 'bg-brand-600', 'text-white');
+        btn.classList.add('bg-slate-800', 'text-slate-300');
+      });
+
+      if (routeKey === 'dashanbei') {
+        const b = document.getElementById('scenarioBtnDashanbei');
+        b.classList.add('active', 'bg-brand-600', 'text-white');
+        b.classList.remove('bg-slate-800', 'text-slate-300');
+      } else if (routeKey === 'xinwawu') {
+        const b = document.getElementById('scenarioBtnXinwawu');
+        b.classList.add('active', 'bg-brand-600', 'text-white');
+        b.classList.remove('bg-slate-800', 'text-slate-300');
+      } else if (routeKey === 'xiangshan') {
+        const b = document.getElementById('scenarioBtnXiangshan');
+        b.classList.add('active', 'bg-brand-600', 'text-white');
+        b.classList.remove('bg-slate-800', 'text-slate-300');
+      }
+
+      renderPhotoList();
+      updateBookPreview();
+      showToast(`已載入路線：${ROUTE_DATA[routeKey].title}`, 'route');
+    }
+
+    // External caller from Route Cards
+    window.switchRouteFromOutside = function(routeKey) {
+      setRoute(routeKey);
+      document.getElementById('demo').scrollIntoView({ behavior: 'smooth' });
+    };
+
+    // Age Switcher Handler
+    function setAgeMode(mode) {
+      currentAgeMode = mode;
+      const juniorBtn = document.getElementById('ageBtnJunior');
+      const seniorBtn = document.getElementById('ageBtnSenior');
+
+      if (mode === 'junior') {
+        juniorBtn.className = 'age-toggle-btn px-3 py-1 rounded-lg text-xs font-bold transition-all bg-amber-500 text-slate-950 shadow';
+        seniorBtn.className = 'age-toggle-btn px-3 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all';
+        showToast('切換為【幼齡版 3–6歲】：加強擬人化疊字與感官啟蒙', 'child');
+      } else {
+        seniorBtn.className = 'age-toggle-btn px-3 py-1 rounded-lg text-xs font-bold transition-all bg-windy-500 text-white shadow';
+        juniorBtn.className = 'age-toggle-btn px-3 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all';
+        showToast('切換為【學齡版 7–10歲】：強化生態推理與先民建築科普', 'graduation-cap');
+      }
+      updateBookPreview();
+    }
+
+    // ESG Calculator Logic
+    function setupCalculator() {
+      const input = document.getElementById('familyInput');
+      const calcCarbon = document.getElementById('calcCarbon');
+      const calcBooks = document.getElementById('calcBooks');
+
+      const update = () => {
+        let val = parseInt(input.value) || 0;
+        if (val < 1) val = 1;
+        const totalCarbon = (val * 3.2).toFixed(1);
+        calcCarbon.textContent = totalCarbon;
+        calcBooks.textContent = val;
+      };
+
+      input.addEventListener('input', update);
+    }
+
+    // Toast Notification helper
+    function showToast(message, iconName = 'circle-check') {
+      const toast = document.getElementById('toastNotification');
+      const toastMsg = document.getElementById('toastMsg');
+      const toastIcon = document.getElementById('toastIcon');
+
+      toastMsg.textContent = message;
+      toastIcon.className = `fa-solid fa-${iconName} text-brand-400 text-base`;
+
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 3500);
+    }
+
+    // ===============================================
+    // FULL-COLOR BOOK MODAL RENDERER & INTERACTION
+    // ===============================================
+    function renderModalBookPage() {
+      const route = ROUTE_DATA[currentRouteKey];
+      const container = document.getElementById('fullColorBookContainer');
+      const indicator = document.getElementById('modalPageIndicator');
+      const prevBtn = document.getElementById('modalPrevPageBtn');
+      const nextBtn = document.getElementById('modalNextPageBtn');
+
+      document.getElementById('modalBookTitle').textContent = `《${route.bookName}》`;
+
+      // modalCurrentView: 0 = Cover, 1..4 = Story Pages, 5 = Certificate
+      if (modalCurrentView === 0) {
+        indicator.textContent = '封面 (精裝)';
+        prevBtn.disabled = true;
+        nextBtn.disabled = false;
+
+        const coverPage = route.pages[0];
+        const coverImgHtml = coverPage.userPhoto 
+          ? `<img src="${coverPage.userPhoto}" class="w-full h-56 object-cover rounded-2xl shadow-inner border-2 border-amber-200" />` 
+          : `<div class="w-full h-56 rounded-2xl bg-amber-100/60 flex items-center justify-center p-3 border-2 border-amber-200">${getSvgIllustration(coverPage.svgType)}</div>`;
+
+        container.innerHTML = `
+          <div class="text-center flex flex-col items-center justify-between h-full py-4 space-y-4">
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-1 bg-brand-100 text-brand-800 text-xs font-bold rounded-full border border-brand-200">
+                🌱 風城親子綠色繪本系列 #01
+              </span>
+              <span class="px-3 py-1 bg-amber-100 text-amber-900 text-xs font-bold rounded-full border border-amber-200">
+                新竹縣在地環境教育認證
+              </span>
+            </div>
+
+            <div>
+              <h2 class="text-2xl sm:text-4xl font-black font-serif text-slate-900 tracking-tight leading-tight">
+                《${route.bookName}》
+              </h2>
+              <p class="text-sm font-serif text-amber-800 mt-1">走進新竹風與土的自然奇遇童話</p>
+            </div>
+
+            <!-- Cover illustration / photo frame -->
+            <div class="w-full max-w-md mx-auto">
+              ${coverImgHtml}
+            </div>
+
+            <div class="space-y-1">
+              <div class="text-xs text-slate-600 font-medium">冒險探險家：<strong class="text-slate-900 font-bold">${route.author}</strong></div>
+              <div class="text-[11px] text-slate-400 font-mono">拍攝地點：${route.title} • 隨選即印 (FSC POD)</div>
+            </div>
+
+            <button onclick="changeModalPage(1)" class="bg-brand-600 hover:bg-brand-700 text-white px-6 py-2.5 rounded-2xl text-xs font-bold shadow-md transition-all flex items-center gap-2">
+              <span>翻開繪本第一頁</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        `;
+      } else if (modalCurrentView >= 1 && modalCurrentView <= 4) {
+        const pageIdx = modalCurrentView - 1;
+        const page = route.pages[pageIdx];
+        const modeData = currentAgeMode === 'junior' ? page.junior : page.senior;
+
+        indicator.textContent = `第 ${modalCurrentView} 頁 / 共 4 頁`;
+        prevBtn.disabled = false;
+        nextBtn.disabled = false;
+
+        const imgHtml = page.userPhoto 
+          ? `<img src="${page.userPhoto}" class="w-full h-full object-cover rounded-xl" />` 
+          : getSvgIllustration(page.svgType);
+
+        container.innerHTML = `
+          <div class="h-full flex flex-col justify-between space-y-4">
+            <!-- Top chapter ribbon -->
+            <div class="flex items-center justify-between border-b border-amber-200/80 pb-2">
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${currentAgeMode === 'junior' ? 'bg-amber-100 text-amber-900' : 'bg-windy-100 text-windy-900'}">
+                  ${modeData.badge}
+                </span>
+                <span class="text-xs font-mono text-slate-400">#${page.photoIndex}</span>
+              </div>
+              <span class="text-xs font-serif font-bold text-slate-600">${route.bookName}</span>
+            </div>
+
+            <!-- Main spread -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 items-center my-auto">
+              <div class="w-full aspect-[4/3] rounded-2xl overflow-hidden border-4 border-white shadow-md bg-slate-100 relative">
+                ${imgHtml}
+                <div class="absolute bottom-2 left-2 bg-slate-900/80 text-white px-2 py-0.5 rounded text-[10px] font-mono">
+                  📍 ${page.location}
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                <h3 class="text-xl font-bold font-serif text-slate-900">${page.title}</h3>
+                <p class="text-sm font-serif leading-relaxed text-slate-700 bg-white/80 p-3.5 rounded-xl border border-amber-100">
+                  ${modeData.narrative}
+                </p>
+
+                <!-- Knowledge card -->
+                <div class="p-3 bg-brand-50 border border-brand-200 rounded-xl text-xs space-y-1">
+                  <div class="font-bold text-brand-900 flex items-center gap-1.5">
+                    <i class="fa-solid fa-seedling text-brand-600"></i>
+                    <span>${modeData.cardTitle}</span>
+                  </div>
+                  <p class="text-slate-600 leading-relaxed text-[11px]">${modeData.cardBody}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Page footer -->
+            <div class="flex items-center justify-between text-xs text-slate-400 border-t border-amber-200/80 pt-2 font-mono">
+              <span>🍃 綠色旅行繪本</span>
+              <span>- ${modalCurrentView} -</span>
+              <span>減碳旅行實踐</span>
+            </div>
+          </div>
+        `;
+      } else {
+        // modalCurrentView === 5 -> Certificate / Back Cover
+        indicator.textContent = '封底：減碳英雄證書';
+        prevBtn.disabled = false;
+        nextBtn.disabled = true;
+
+        container.innerHTML = `
+          <div class="h-full flex flex-col justify-between items-center text-center py-4 space-y-4">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-600 to-emerald-400 text-white flex items-center justify-center text-2xl shadow-lg">
+              <i class="fa-solid fa-award"></i>
+            </div>
+
+            <div>
+              <span class="text-xs font-bold text-emerald-800 tracking-wider uppercase">CERTIFICATE OF GREEN COMMUTE</span>
+              <h2 class="text-2xl sm:text-3xl font-black font-serif text-slate-900 mt-1">
+                風城小小永續探險家證書
+              </h2>
+            </div>
+
+            <div class="bg-white/90 p-5 rounded-2xl border-2 border-dashed border-emerald-300 max-w-md w-full text-xs space-y-2.5 text-left">
+              <div class="flex justify-between border-b pb-1.5">
+                <span class="text-slate-500">恭喜榮譽探險小英雄：</span>
+                <strong class="text-slate-900">${route.author}</strong>
+              </div>
+              <div class="flex justify-between border-b pb-1.5">
+                <span class="text-slate-500">完成探索主題路線：</span>
+                <strong class="text-brand-800">${route.title}</strong>
+              </div>
+              <div class="flex justify-between border-b pb-1.5">
+                <span class="text-slate-500">累積拯救地球減碳量：</span>
+                <strong class="text-emerald-700 text-sm font-black font-mono">${route.carbon} kg CO₂e</strong>
+              </div>
+              <p class="text-slate-500 text-[11px] leading-relaxed pt-1">
+                感謝你們選擇低碳搭乘與步行踏青，減少空氣污染與塞車廢氣，為新竹的大自然留下了最美麗溫柔的足跡！
+              </p>
+            </div>
+
+            <div class="flex items-center gap-4 text-xs font-serif text-slate-500">
+              <div>指導單位：新竹縣政府教育局 / 文化局</div>
+              <div>永續評審團 敬贈</div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button onclick="changeModalPage(0)" class="text-xs text-brand-700 underline font-bold px-3 py-1">
+                回到封面
+              </button>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // Modal page navigation helper
+    window.changeModalPage = function(deltaOrIndex) {
+      if (typeof deltaOrIndex === 'number' && deltaOrIndex >= 0 && deltaOrIndex <= 5) {
+        modalCurrentView = deltaOrIndex;
+      }
+      renderModalBookPage();
+    };
+
+    // Setup Clipboard Paste, Drag & Drop, and Upload Listeners
+    function setupUploadAndPaste() {
+      const dropZone = document.getElementById('pasteDropZone');
+      const fileInput = document.getElementById('userPhotoInput');
+      const resetBtn = document.getElementById('resetCustomPhotoBtn');
+
+      // File input change
+      fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (evt) => {
+            handleUserImage(evt.target.result, file.name);
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      // Reset custom photo button
+      resetBtn.addEventListener('click', () => {
+        const route = ROUTE_DATA[currentRouteKey];
+        route.pages[currentPageIndex].userPhoto = null;
+        updateBookPreview();
+        renderPhotoList();
+        showToast('已還原為示範動態插畫', 'rotate-left');
+      });
+
+      // GLOBAL CLIPBOARD PASTE LISTENER (Ctrl+V)
+      window.addEventListener('paste', (e) => {
+        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+        for (let i = 0; i < items.length; i++) {
+          if (items[i].type.indexOf('image') !== -1) {
+            const blob = items[i].getAsFile();
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+              handleUserImage(evt.target.result, "剪貼簿貼上照片");
+            };
+            reader.readAsDataURL(blob);
+            break;
+          }
+        }
+      });
+
+      // Drag and drop events
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropZone.classList.add('border-brand-600', 'bg-brand-100/50');
+        }, false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          dropZone.classList.remove('border-brand-600', 'bg-brand-100/50');
+        }, false);
+      });
+
+      dropZone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const file = dt.files[0];
+        if (file && file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = (evt) => {
+            handleUserImage(evt.target.result, file.name);
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    // Setup Coloring Sheet Modal
+    function setupColoringModal() {
+      const modal = document.getElementById('coloringModal');
+      const openBtn = document.getElementById('openColoringTemplateBtn');
+      const navOpenBtn = document.getElementById('navOpenColoringBtn');
+      const mobileOpenBtn = document.getElementById('mobileColoringBtn');
+      const fromBookBtn = document.getElementById('openColoringFromBookBtn');
+      const closeBtn = document.getElementById('closeColoringModal');
+      const printBtn = document.getElementById('printColoringSheetBtn');
+
+      const updateColoringContent = () => {
+        const route = ROUTE_DATA[currentRouteKey];
+        const page = route.pages[currentPageIndex];
+        
+        document.getElementById('coloringSheetTitle').textContent = `【${route.title}】我的${page.title}探索塗鴉線稿`;
+        document.getElementById('coloringLineArtSvg').innerHTML = getLineArtSvg(page.svgType);
+        document.getElementById('coloringSheetFact').textContent = `觀察提示：${page.junior.cardBody}`;
+      };
+
+      const openModal = () => {
+        updateColoringContent();
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      };
+
+      openBtn.onclick = openModal;
+      navOpenBtn.onclick = openModal;
+      mobileOpenBtn.onclick = openModal;
+      fromBookBtn.onclick = openModal;
+
+      closeBtn.onclick = () => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      };
+
+      modal.onclick = (e) => {
+        if (e.target === modal) {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }
+      };
+
+      printBtn.onclick = () => {
+        window.print();
+        showToast('已為您啟動列印對話框！可直接列印為 A4 填色紙或另存 PDF。', 'print');
+      };
+    }
+
+    // Setup Full-Color Book Modal
+    function setupPdfModal() {
+      const modal = document.getElementById('pdfModal');
+      const openBtn = document.getElementById('viewPdfModalBtn');
+      const closeBtn = document.getElementById('closePdfModal');
+      const downloadBtn = document.getElementById('downloadPdfFakeBtn');
+      const orderInsideBtn = document.getElementById('orderBookInsideBtn');
+      const orderOutsideBtn = document.getElementById('orderBookBtn');
+      const prevBtn = document.getElementById('modalPrevPageBtn');
+      const nextBtn = document.getElementById('modalNextPageBtn');
+
+      openBtn.onclick = () => {
+        modalCurrentView = 0;
+        renderModalBookPage();
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      };
+
+      closeBtn.onclick = () => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      };
+
+      modal.onclick = (e) => {
+        if (e.target === modal) {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }
+      };
+
+      prevBtn.onclick = () => {
+        if (modalCurrentView > 0) {
+          modalCurrentView--;
+          renderModalBookPage();
+        }
+      };
+
+      nextBtn.onclick = () => {
+        if (modalCurrentView < 5) {
+          modalCurrentView++;
+          renderModalBookPage();
+        }
+      };
+
+      downloadBtn.onclick = () => {
+        window.print();
+        showToast('電子繪本已備妥！請於列印視窗選擇「另存為 PDF」或直接彩色列印！', 'download');
+      };
+
+      const handleOrder = () => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        showToast('感謝訂購！已送交在地 FSC 認證印刷廠，預計 3-5 日精裝出貨！', 'truck-fast');
+      };
+
+      orderInsideBtn.onclick = handleOrder;
+      orderOutsideBtn.onclick = handleOrder;
+    }
+
+    // Attach Event Listeners on DOM Load
+    window.addEventListener('DOMContentLoaded', () => {
+      // Initialize components
+      renderPhotoList();
+      updateBookPreview();
+      setupCalculator();
+      setupPdfModal();
+      setupColoringModal();
+      setupUploadAndPaste();
+
+      // Mobile Menu Toggle
+      const mobileBtn = document.getElementById('mobileMenuBtn');
+      const mobileMenu = document.getElementById('mobileMenu');
+      mobileBtn.onclick = () => {
+        mobileMenu.classList.toggle('hidden');
+      };
+
+      // Scenario Buttons
+      document.getElementById('scenarioBtnDashanbei').onclick = () => setRoute('dashanbei');
+      document.getElementById('scenarioBtnXinwawu').onclick = () => setRoute('xinwawu');
+      document.getElementById('scenarioBtnXiangshan').onclick = () => setRoute('xiangshan');
+
+      // Age Toggle Buttons
+      document.getElementById('ageBtnJunior').onclick = () => setAgeMode('junior');
+      document.getElementById('ageBtnSenior').onclick = () => setAgeMode('senior');
+
+      // Main Pagination
+      document.getElementById('prevPageBtn').onclick = () => {
+        if (currentPageIndex > 0) {
+          currentPageIndex--;
+          updateBookPreview();
+          renderPhotoList();
+        }
+      };
+
+      document.getElementById('nextPageBtn').onclick = () => {
+        const route = ROUTE_DATA[currentRouteKey];
+        if (currentPageIndex < route.pages.length - 1) {
+          currentPageIndex++;
+          updateBookPreview();
+          renderPhotoList();
+        }
+      };
+
+      // Re-generate button
+      document.getElementById('regenerateBtn').onclick = simulateRegeneration;
+    });
+  </script>
+</body>
+</html>
